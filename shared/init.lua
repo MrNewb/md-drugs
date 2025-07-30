@@ -51,4 +51,8 @@ else
 
     RegisterModelRequest = Bridge.Utility.LoadModel
 
+    function Notify(text, type)
+        return Bridge.Notify.SendNotify(text, type, 5000)
+    end
+
 end

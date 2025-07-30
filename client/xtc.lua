@@ -85,7 +85,7 @@ RegisterNetEvent("md-drugs:client:GetPressBack", function(type, press)
 end)
 
 RegisterNetEvent("md-drugs:client:stealisosafrole", function(data)
-  if not minigame() then
+  if not ReturnMinigameSuccess() then
     Notify(locale("xtc.fail"), "error")
     return
   end
@@ -94,7 +94,7 @@ RegisterNetEvent("md-drugs:client:stealisosafrole", function(data)
 end)
 
 RegisterNetEvent("md-drugs:client:stealmdp2p", function(data)
-  if not minigame() then
+  if not ReturnMinigameSuccess() then
     Notify(locale("xtc.fail"), "error")
     return
   end
@@ -124,7 +124,7 @@ RegisterNetEvent("md-drugs:client:stampwhite", function(data)
         icon = GetImage('white_xtc'),
         title = 'White XTC',
         onSelect = function()
-          if not minigame() then
+          if not ReturnMinigameSuccess() then
             Notify(locale("xtc.fail"), "error")
             return
           end
@@ -136,7 +136,7 @@ RegisterNetEvent("md-drugs:client:stampwhite", function(data)
         icon = GetImage('red_xtc'),
         title = 'Red XTC',
         onSelect = function()
-          if not minigame() then
+          if not ReturnMinigameSuccess() then
             Notify(locale("xtc.fail"), "error")
             return
           end
@@ -148,7 +148,7 @@ RegisterNetEvent("md-drugs:client:stampwhite", function(data)
         icon = GetImage('orange_xtc'),
         title = 'Orange XTC',
         onSelect = function()
-          if not minigame() then
+          if not ReturnMinigameSuccess() then
             Notify(locale("xtc.fail"), "error")
             return
           end
@@ -160,7 +160,7 @@ RegisterNetEvent("md-drugs:client:stampwhite", function(data)
         icon = GetImage('blue_xtc'),
         title = 'Blue XTC',
         onSelect = function()
-          if not minigame() then
+          if not ReturnMinigameSuccess() then
             Notify(locale("xtc.fail"), "error")
             return
           end

@@ -384,7 +384,7 @@ function SpawnCarPedChase()
 				label = locale("targets.lean.st"),
 				action = function()
 					hit = hit + 1
-					if not minigame() then return end
+					if not ReturnMinigameSuccess() then return end
 					TriggerServerEvent('md-drugs:server:givelean')
 					started = nil
 					if math.random(1, 100) <= 30 or hit == 4 then
@@ -438,7 +438,7 @@ function SpawnMethCarPedChase()
 				icon = 'fa-solid fa-car',
 				label = locale("targets.meth.stealfromcar"),
 				action = function()
-					if not minigame() then return end
+					if not ReturnMinigameSuccess() then return end
 					TriggerServerEvent('md-drugs:server:givemethingridients')
 					startedmeth = false
 					if math.random(1, 100) <= 30 then

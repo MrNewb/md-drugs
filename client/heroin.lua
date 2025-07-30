@@ -88,7 +88,7 @@ end)
 RegisterNetEvent("md-drugs:client:heatliquidheroin", function(data) 
     local loc, head = GetEntityCoords(data.data), GetEntityHeading(data.data)
     if not ItemCheck('emptyvial') then return end
-    if not minigame() then
+    if not ReturnMinigameSuccess() then
         dirty = true
         TriggerServerEvent("md-drugs:server:failheatingheroin")
 		LoadParticle("core")
@@ -121,7 +121,7 @@ RegisterNetEvent("md-drugs:client:getheroinkitback", function(data)
 end)
 
 RegisterNetEvent("md-drugs:client:fillneedle", function(data)
-    if not minigame() then TriggerServerEvent("md-drugs:server:failheroin", data.data) return end
+    if not ReturnMinigameSuccess() then TriggerServerEvent("md-drugs:server:failheroin", data.data) return end
     if not progressbar(locale("Heroin.needles"), 4000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:fillneedle", data.data)
 end)

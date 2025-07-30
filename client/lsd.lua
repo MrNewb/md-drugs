@@ -28,14 +28,14 @@ local function createLabKit(coord, head)
 end
 
 RegisterNetEvent("md-drugs:client:getlysergic", function(data)
-    if not minigame() then return end
+    if not ReturnMinigameSuccess() then return end
     if not progressbar(locale("lsd.steallys"), 4000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:getlysergic", data.data)
 end)
 
 
 RegisterNetEvent("md-drugs:client:getdiethylamide", function(data)
-    if not minigame() then return end
+    if not ReturnMinigameSuccess() then return end
     if not progressbar(locale("lsd.stealdie"), 4000, 'uncuff') then return end
     TriggerServerEvent('md-drugs:server:getdiethylamide', data.data)
 end)
@@ -70,7 +70,7 @@ RegisterNetEvent("md-drugs:client:heatliquid", function(data)
     local dict = "scr_ie_svm_technical2"
     if not ItemCheck('lysergic_acid') then return end
     if not ItemCheck('diethylamide') then return end
-    if not minigame() then
+    if not ReturnMinigameSuccess() then
         dirtylsd = true
         LoadParticle(dict)
         local exitPtfx = StartParticleFxLoopedOnEntity("scr_dst_cocaine", data.data, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5,
@@ -89,7 +89,7 @@ end)
 
 RegisterNetEvent("md-drugs:client:refinequalityacid", function()
     if not ItemCheck('lsd_one_vial') then return end
-    if not minigame() then
+    if not ReturnMinigameSuccess() then
         TriggerServerEvent("md-drugs:server:failrefinequality")
         return
     end
@@ -99,7 +99,7 @@ end)
 
 RegisterNetEvent("md-drugs:client:maketabpaper", function()
     if not ItemCheck('tab_paper') then return end
-    if not minigame() then
+    if not ReturnMinigameSuccess() then
         TriggerServerEvent("md-drugs:server:failtabs")
         return
     end

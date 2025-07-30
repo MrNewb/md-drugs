@@ -19,7 +19,7 @@ end
 
 local function dials()
 	if amonia == true then
-		if not minigame() then
+		if not ReturnMinigameSuccess() then
 			AddExplosion(1005.773, -3200.402, -38.524, 49, 10, true, false, true)
 			ClearPedTasks(PlayerPedId())
 			amonia = nil
