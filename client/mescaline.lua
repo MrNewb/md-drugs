@@ -49,7 +49,7 @@ AddEventHandler('onResourceStop', function(resourceName)
 end)
 
 RegisterNetEvent("md-drugs:client:drymescaline", function()
-    if not ItemCheck('cactusbulb') then return end
+    if not VerifyPlayerHasItem('cactusbulb') then return end
     if not progressbar(locale("mescaline.dry"), 4000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:drymescaline")
 end)

@@ -251,59 +251,6 @@ function makeMenu(name, rep)
 	lib.registerContext({ id = data.id, title = data.title, options = menu })
 end
 
-function ItemCheck(item)
-	if GetResourceState('ox_inventory') == 'started' then
-		if exports.ox_inventory:GetItemCount(item) >= 1 then return true else
-			Notify('You Need ' .. GetLabel(item) .. " !", 'error')
-			return false
-		end
-	else
-		if QBCore.Shared.Items[item] == nil then
-			print("There Is No " .. item .. " In Your QB Items.lua")
-			return
-		end
-		if QBCore.Functions.HasItem(item) then return true else
-			Notify('You Need ' .. QBCore.Shared.Items[item].label .. " !", 'error')
-			return false
-		end
-	end
-end
-
-function hasItem(item)
-	if GetResourceState('ox_inventory') == 'started' then
-		if exports.ox_inventory:GetItemCount(item) >= 1 then return true else return false end
-	else
-		if QBCore.Shared.Items[item] == nil then
-			print("There Is No " .. item .. " In Your QB Items.lua")
-			return
-		end
-		if QBCore.Functions.HasItem(item) then return true else return false end
-	end
-end
-
-function ItemCheckMulti(item)
-	local need = 0
-	local has = 0
-	for k, v in pairs(item) do
-		need = need + 1
-		if GetResourceState('ox_inventory') == 'started' then
-			if exports.ox_inventory:GetItemCount(v) >= 1 then has = has + 1 else Notify(
-				'You Need ' .. GetLabel(v) .. " !", 'error') end
-		else
-			if QBCore.Shared.Items[v] == nil then
-				print("There Is No " .. item .. " In Your QB Items.lua")
-				return
-			end
-			if QBCore.Functions.HasItem(v) then has = has + 1 else Notify(
-				'You Need ' .. QBCore.Shared.Items[v].label .. " !", 'error') end
-		end
-	end
-	if need == has then
-		return true
-	else
-		return false
-	end
-end
 
 function Email(sender, subject, message)
 	if Config.Phone == 'yflip' then

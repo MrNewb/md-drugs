@@ -4,9 +4,9 @@ local heated = nil
 local active = nil
 
 local function startcook()
-	if not ItemCheck('empty_weed_bag') then return end
-	if not ItemCheck('acetone') then return end
-	if not ItemCheck('ephedrine') then return end
+	if not VerifyPlayerHasItem('empty_weed_bag') then return end
+	if not VerifyPlayerHasItem('acetone') then return end
+	if not VerifyPlayerHasItem('ephedrine') then return end
 	if amonia == nil then
 		active = true
 		TriggerServerEvent("md-drugs:server:startcook")

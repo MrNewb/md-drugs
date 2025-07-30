@@ -61,7 +61,7 @@ RegisterNetEvent("md-drugs:client:dryplant", function(data)
 end)
 
 RegisterNetEvent("md-drugs:client:cutheroin", function(data) 
-    if not ItemCheck('bakingsoda') then return end
+    if not VerifyPlayerHasItem('bakingsoda') then return end
 	if not progressbar(locale("Heroin.cutting"), 4000, 'uncuff') then return end
 	TriggerServerEvent("md-drugs:server:cutheroin", data.data)   
 end)
@@ -87,7 +87,7 @@ end)
 
 RegisterNetEvent("md-drugs:client:heatliquidheroin", function(data) 
     local loc, head = GetEntityCoords(data.data), GetEntityHeading(data.data)
-    if not ItemCheck('emptyvial') then return end
+    if not VerifyPlayerHasItem('emptyvial') then return end
     if not ReturnMinigameSuccess() then
         dirty = true
         TriggerServerEvent("md-drugs:server:failheatingheroin")
@@ -101,7 +101,7 @@ RegisterNetEvent("md-drugs:client:heatliquidheroin", function(data)
 end)
 
 RegisterNetEvent("md-drugs:client:cleanheroinlabkit", function(data)
-    if not ItemCheck('cleaningkit') then return end
+    if not VerifyPlayerHasItem('cleaningkit') then return end
     if not progressbar(locale("Heroin.clean"), 4000, 'clean') then return end
 	local done = lib.callback.await('removeCleaningkit', false)
     if done then dirty = false end

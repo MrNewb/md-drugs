@@ -56,7 +56,7 @@ CreateThread(function()
 		label = locale("targets.weed.dry"),
 		distance = 1,
 		action = function()
-			if not ItemCheck('wetcannabis') then return end
+			if not VerifyPlayerHasItem('wetcannabis') then return end
 			if drying then
 				Notify(locale("Weed.busy"), "error")
 			else
@@ -117,7 +117,7 @@ CreateThread(function()
 		icon = "fa-solid fa-oil-can",
 		label = locale("targets.weed.oil"),
 		action = function()
-			if not ItemCheckMulti({ 'butane', 'grindedweed' }) then return end
+			if not VerifyPlayerHasMultipleItems({ 'butane', 'grindedweed' }) then return end
 			if not ReturnMinigameSuccess() then
 				local loc = GetEntityCoords(PlayerPedId())
 				AddExplosion(loc.x, loc.y, loc.z, 49, 10, true, false, true)

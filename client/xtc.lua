@@ -103,14 +103,14 @@ RegisterNetEvent("md-drugs:client:stealmdp2p", function(data)
 end)
 
 RegisterNetEvent("md-drugs:client:makingrawxtc", function(data)
-  if not ItemCheck('isosafrole') then return end
-  if not ItemCheck('mdp2p') then return end
+  if not VerifyPlayerHasItem('isosafrole') then return end
+  if not VerifyPlayerHasItem('mdp2p') then return end
   if not progressbar(locale("xtc.raw"), 4000, 'uncuff') then return end
   TriggerServerEvent("md-drugs:server:makingrawxtc", data.data)
 end)
 
 RegisterNetEvent("md-drugs:client:MakeXTC", function(data)
-  if not ItemCheck('raw_xtc') then return end
+  if not VerifyPlayerHasItem('raw_xtc') then return end
   if not progressbar(locale("xtc.pressing"), 4000, 'uncuff') then return end
   TriggerServerEvent("md-drugs:server:makextc", data)
 end)

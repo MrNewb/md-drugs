@@ -53,6 +53,8 @@ else
 
     GetPlayerJobData = Bridge.Framework.GetPlayerJobData
 
+    VerifyPlayerHasItem = Bridge.Inventory.HasItem
+
     function Notify(text, type)
         return Bridge.Notify.SendNotify(text, type, 5000)
     end
@@ -71,5 +73,18 @@ else
         end
         return false
     end
+
+    function VerifyPlayerHasMultipleItems(items)
+        local _searchList = items or {}
+        local neededCount = #_searchList
+        local foundCount = 0
+        for k, v in pairs(_searchList) do
+            if VerifyPlayerHasItem(v) then
+                foundCount = foundCount + 1
+            end
+        end
+        return foundCount == neededCount
+    end
+
 
 end

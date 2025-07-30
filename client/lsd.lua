@@ -14,7 +14,7 @@ local function createLabKit(coord, head)
             label = locale("targets.lsd.clean"),
             data = labkit,
             action = function()
-                if not ItemCheck('cleaningkit') then return end
+                if not VerifyPlayerHasItem('cleaningkit') then return end
                 if not progressbar(locale("lsd.clean"), 4000, 'clean') then return end
                 local check = lib.callback.await('md-drugs:server:removecleaningkit')
                 if check then
@@ -68,8 +68,8 @@ end)
 RegisterNetEvent("md-drugs:client:heatliquid", function(data)
     local PedCoords, head = GetEntityCoords(data.data), GetEntityHeading(data.data)
     local dict = "scr_ie_svm_technical2"
-    if not ItemCheck('lysergic_acid') then return end
-    if not ItemCheck('diethylamide') then return end
+    if not VerifyPlayerHasItem('lysergic_acid') then return end
+    if not VerifyPlayerHasItem('diethylamide') then return end
     if not ReturnMinigameSuccess() then
         dirtylsd = true
         LoadParticle(dict)
@@ -88,7 +88,7 @@ end)
 
 
 RegisterNetEvent("md-drugs:client:refinequalityacid", function()
-    if not ItemCheck('lsd_one_vial') then return end
+    if not VerifyPlayerHasItem('lsd_one_vial') then return end
     if not ReturnMinigameSuccess() then
         TriggerServerEvent("md-drugs:server:failrefinequality")
         return
@@ -98,7 +98,7 @@ RegisterNetEvent("md-drugs:client:refinequalityacid", function()
 end)
 
 RegisterNetEvent("md-drugs:client:maketabpaper", function()
-    if not ItemCheck('tab_paper') then return end
+    if not VerifyPlayerHasItem('tab_paper') then return end
     if not ReturnMinigameSuccess() then
         TriggerServerEvent("md-drugs:server:failtabs")
         return
@@ -113,7 +113,7 @@ RegisterNetEvent("md-drugs:client:buytabs", function(data)
 end)
 
 RegisterNetEvent("md-drugs:client:buylabkit", function()
-    if hasItem('lsdlabkit') then
+    if VerifyPlayerHasItem('lsdlabkit') then
         Notify(locale("lsd.hav"), 'error')
         return
     end

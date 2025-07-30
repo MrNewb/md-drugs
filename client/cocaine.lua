@@ -47,13 +47,13 @@ AddEventHandler('onResourceStop', function(resourceName)
 end)
 
 RegisterNetEvent("md-drugs:client:makepowder", function(data)
-    if not ItemCheck('coca_leaf') then return end
+    if not VerifyPlayerHasItem('coca_leaf') then return end
     if not progressbar(locale("Coke.makepow"), 4000, 'uncuff') then return end
 	TriggerServerEvent("md-drugs:server:makepowder", data.data)
 end)
 
 RegisterNetEvent("md-drugs:client:cutcokeone", function(data)
-    if not ItemCheck('bakingsoda') then return end
+    if not VerifyPlayerHasItem('bakingsoda') then return end
 	cuttingcoke = true
     if Config.FancyCokeAnims then
 	    CutCoke()
@@ -65,7 +65,7 @@ RegisterNetEvent("md-drugs:client:cutcokeone", function(data)
 end)
 
 RegisterNetEvent("md-drugs:client:bagcoke", function(data) 
-    if not ItemCheck('empty_weed_bag') then return end
+    if not VerifyPlayerHasItem('empty_weed_bag') then return end
 	baggingcoke = true
     if Config.FancyCokeAnims then
 	    BagCoke()
