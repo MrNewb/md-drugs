@@ -51,8 +51,25 @@ else
 
     RegisterModelRequest = Bridge.Utility.LoadModel
 
+    GetPlayerJobData = Bridge.Framework.GetPlayerJobData
+
     function Notify(text, type)
         return Bridge.Notify.SendNotify(text, type, 5000)
+    end
+
+    function ValidatePlayerJob(job)
+        local playerJob = GetPlayerJobData()
+        return playerJob and playerJob.jobName == job
+    end
+
+    function CheckForEmsType()
+        local playerJob = GetPlayerJobData()
+        for k, v in pairs(Config.EmsJobs) do
+            if playerJob.jobName == v then
+                return true
+            end
+        end
+        return false
     end
 
 end

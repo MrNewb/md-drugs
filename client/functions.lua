@@ -2,16 +2,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 local progressbartype = Config.progressbartype
 local ReturnMinigameSuccesstype = Config.ReturnMinigameSuccesstype
-local notifytype = Config.Notify
 local dispatch = Config.Dispatch
-
-function getJobType()
-	return QBCore.Functions.GetPlayerData().job.type
-end
-
-function getJobName()
-	return QBCore.Functions.GetPlayerData().job.name
-end
 
 function progressbar(text, time, anim)
 	TriggerEvent('animations:client:EmoteCommandStart', { anim })

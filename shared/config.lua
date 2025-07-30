@@ -23,9 +23,9 @@ Config.Tier2 = 300 -- amount to hit for level 3
 
 ---------------------------------- BRIDGE 
 Config.progressbartype = 'oxcir' -- either 'qb', 'oxcir', 'oxbar'
-Config.Notify = 'ox' -- -- either 'qb' or 'ox' or 'okok'
 Config.Phone = 'qb' -- either 'qb' or 'yflip' or 'qs'
 Config.Dispatch = 'ps' -- either 'ps', 'cd', 'core', 'aty'
+Config.EmsJobs = { 'ambulance', 'doctor' } -- jobs that are allowed to use the prescription pads
 Config.Target = 'ox' -- qb or ox
 Config.Inventory = 'ox' -- qb or ox, other if you dont use ox just mark as qb
 Config.Minigames = {

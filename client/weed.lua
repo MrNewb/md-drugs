@@ -1,18 +1,6 @@
 local WeedPlant = {}
 local exploded, drying = false, false
 
-local function hasJob()
-	if Config.Joblock then
-		if getJobName() == Config.weedjob then
-			return true
-		else
-			return false
-		end
-	else
-		return true
-	end
-end
-
 local function pick(loc)
 	if not progressbar(locale("Weed.pick"), 4000, 'uncuff') then return end
 	TriggerServerEvent("weed:pickupCane", loc)
@@ -88,13 +76,13 @@ CreateThread(function()
 						TriggerServerEvent('md-drugs:server:dryoutweed')
 					end,
 					canInteract = function()
-						if hasJob() then return true end
+						if ValidatePlayerJob(Config.weedjob) then return true end
 					end
 				}, nil)
 			end
 		end,
 		canInteract = function()
-			if hasJob() then return true end
+			if ValidatePlayerJob(Config.weedjob) then return true end
 		end
 	})
 
@@ -105,7 +93,7 @@ CreateThread(function()
 			label = locale("targets.coke.exit"),
 			distance = 2.0,
 			action = function() SetEntityCoords(PlayerPedId(), config.singleSpot.weedTelein) end,
-			canInteract = function() if hasJob() then return true end end
+			canInteract = function() if ValidatePlayerJob(Config.weedjob) then return true end end
 		})
 	AddBoxZoneSingle('teleinweedin', config.singleSpot.weedTelein,
 		{
@@ -114,14 +102,14 @@ CreateThread(function()
 			label = locale("targets.coke.enter"),
 			distance = 2.0,
 			action = function() SetEntityCoords(PlayerPedId(), config.singleSpot.weedTeleout) end,
-			canInteract = function() if hasJob() then return true end end
+			canInteract = function() if ValidatePlayerJob(Config.weedjob) then return true end end
 		})
 	AddBoxZoneSingle('MakeButterCrafting', config.singleSpot.MakeButter,
 		{
 			label = locale("targets.weed.butt"),
 			action = function() lib.showContext('ButterCraft') end,
 			icon = "fa-solid fa-cookie",
-			canInteract = function() if hasJob() then return true end end
+			canInteract = function() if ValidatePlayerJob(Config.weedjob) then return true end end
 		})
 
 	AddBoxZoneSingle('makeoil', config.singleSpot.MakeOil, {
@@ -143,7 +131,7 @@ CreateThread(function()
 			TriggerServerEvent("md-drugs:server:makeoil")
 		end,
 		canInteract = function()
-			if hasJob() and exploded == false then return true end
+			if ValidatePlayerJob(Config.weedjob) and exploded == false then return true end
 		end,
 	})
 	local stove = CreateObject("prop_cooker_03", config.singleSpot.MakeButter.x, config.singleSpot.MakeButter.y,
