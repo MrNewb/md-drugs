@@ -9,9 +9,9 @@ RegisterNetEvent("md-drugs:client:GetOxyCar", function()
 	local oxycar = CreateVehicle("burrito3",loc.x, loc.y,loc.z, loc.w, true, false)
     exports[Config.Fuel]:SetFuel(oxycar, 100.0)
     TriggerEvent("vehiclekeys:client:SetOwner", GetVehicleNumberPlateText(oxycar))
-	Notify(Lang.oxy.truck, 'success')
+	Notify(locale("oxy.truck"), 'success')
 	TriggerEvent("md-drugs:client:getoxylocationroute")
-	AddSingleModel(oxycar,  { event = "md-drugs:client:getfromtrunk", icon = "fa-solid fa-box", label = Lang.targets.oxy.pack}, nil )
+	AddSingleModel(oxycar,  { event = "md-drugs:client:getfromtrunk", icon = "fa-solid fa-box", label = locale("targets.oxy.pack")}, nil )
 end)
 
 RegisterNetEvent("md-drugs:client:getoxylocationroute", function()
@@ -27,17 +27,17 @@ RegisterNetEvent("md-drugs:client:getoxylocationroute", function()
 			Wait(1000)
 		until #(GetEntityCoords(PlayerPedId()) - vector3(loc.x,loc.y,loc.z)) < 5.0
 		PoliceCall(Config.PoliceAlertOxy)
-		AddSingleModel(oxybuyer,  { type = "client", label = Lang.targets.oxy.talk, icon = "fa-solid fa-dollar-sign", 
+		AddSingleModel(oxybuyer,  { type = "client", label = locale("targets.oxy.talk"), icon = "fa-solid fa-dollar-sign",
 		action = function()
 			if carryPackage then
-				if not progressbar(Lang.oxy.hand, 4000, 'uncuff') then return end
+				if not progressbar(locale("oxy.hand"), 4000, 'uncuff') then return end
 				TriggerServerEvent("md-drugs:server:giveoxybox")
 				DeleteEntity(oxybuyer)
 				DetachEntity(carryPackage, true, true)
 				DeleteObject(carryPackage)
 				carryPackage = nil
 			else
-				Notify(Lang.oxy.empty, "error")
+				Notify(locale("oxy.empty"), "error")
 			end
 		end}, oxybuyer)
 	end
@@ -46,7 +46,7 @@ end)
 
 RegisterNetEvent("md-drugs:client:getfromtrunk", function() 
 	if carryPackage then
-		Notify(Lang.oxy.cantcarry, "error")
+		Notify(locale("oxy.cantcarry"), "error")
 	else
 		local pos = GetEntityCoords(PlayerPedId(), true)
 		lib.requestAnimDict('anim@heists@box_carry@')
@@ -61,14 +61,14 @@ end)
 
 RegisterNetEvent("md-drugs:client:giveoxybox", function(data) 
 	if carryPackage then
-		if not progressbar(Lang.oxy.hand, 4000, 'uncuff') then return end
+		if not progressbar(locale("oxy.hand"), 4000, 'uncuff') then return end
 		TriggerServerEvent("md-drugs:server:giveoxybox")
 		DeleteEntity(data.ped)
 		DetachEntity(carryPackage, true, true)
 		DeleteObject(carryPackage)
 	    carryPackage = nil
 	else
-		Notify(Lang.oxy.empty, "error")
+		Notify(locale("oxy.empty"), "error")
 	end
 end)
 

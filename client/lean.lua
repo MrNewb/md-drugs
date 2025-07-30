@@ -1,5 +1,5 @@
 RegisterNetEvent("md-drugs:client:getsyruplocationtobuy", function()
-	Notify(Lang.Lean.marked, "success")
+	Notify(locale("Lean.marked"), "success")
 	SpawnCarPedChase()
 end)
 

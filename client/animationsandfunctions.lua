@@ -371,7 +371,7 @@ function SpawnCarPedChase()
 	local config = lib.callback.await('md-drugs:server:getLocs', false)
 	local start = config.StartLoc[math.random(1,#config.StartLoc)]
 	if started then
-		Notify(Lang.lean.act,'error')
+		Notify(locale("lean.act"),'error')
 	else
     started = true
     lib.requestModel("pounder", Config.RequestModelTime)
@@ -393,7 +393,7 @@ function SpawnCarPedChase()
 	until #(GetEntityCoords(driver) - stoploc) < 20.0 or GetEntityHealth(driver) == 0 
 	RemoveBlip(leancar)
 	if GetEntityHealth(driver) == 0 then 
-		AddSingleModel(leancar, { name = 'leancar', icon = 'fa-solid fa-car', label = Lang.targets.lean.st,
+		AddSingleModel(leancar, { name = 'leancar', icon = 'fa-solid fa-car', label = locale("targets.lean.st"),
 			action = function()
 				hit = hit + 1
 				 if not minigame() then return end
@@ -420,7 +420,7 @@ local start = config.StartLoc[math.random(1,#config.StartLoc)]
 local startedmeth = false
 
 if startedmeth then
-	Notify(Lang.meth.act,'error')
+	Notify(locale("meth.act"),'error')
 else
     startedmeth = true
     lib.requestModel("journey", Config.RequestModelTime)
@@ -444,7 +444,7 @@ else
 		AddSingleModel(methcar,{
 			name = 'methcar',
 			icon = 'fa-solid fa-car',
-			label = Lang.targets.meth.stealfromcar,
+			label = locale("targets.meth.stealfromcar"),
 			action = function()
 			 if not minigame() then return end
 			 TriggerServerEvent('md-drugs:server:givemethingridients')

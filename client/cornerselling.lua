@@ -31,10 +31,10 @@ local function sellDrug(item, amount, price, targ)
     PoliceCall(20)
     targbusy = true
     if IsPedInAnyVehicle(PlayerPedId(), true) then 
-        Notify(Lang.Cornerselling.inveh, 'error') 
+        Notify(locale("Cornerselling.inveh"), 'error') 
         reset(targ)
     return end
-    if not progressbar(string.format(Lang.Cornerselling.selling, GetLabel(item), price), 4000, 'uncuff') then return end
+    if not progressbar(string.format(locale("Cornerselling.selling"), GetLabel(item), price), 4000, 'uncuff') then return end
     TriggerServerEvent('md-drugs:server:sellCornerDrugs', item, amount, price)
     reset(targ)
  end
@@ -42,7 +42,7 @@ local function sellDrug(item, amount, price, targ)
 local function deny(targ)
     PoliceCall(20)
     targbusy = true
-    if not progressbar(Lang.Cornerselling.deny, 4000, 'argue5') then return end
+    if not progressbar(locale("Cornerselling.deny"), 4000, 'argue5') then return end
     reset(targ)
 end
 
@@ -52,7 +52,7 @@ function Cornersell()
     if targ == nil then return end
     if IsPedInAnyVehicle(targ, false) or GetEntityHealth(targ) == 0 or not IsPedHuman(targ) then return end
     local data = lib.callback.await('md-drugs:server:cornerselling:getAvailableDrugs', false, targ)
-    if data.item == 'nothing' then Notify(Lang.Cornerselling.nodrugs, 'error') sell = false  FreezeEntityPosition(targ, false)  ClearPedTasks(targ) active = false return false end
+    if data.item == 'nothing' then Notify(locale("Cornerselling.nodrugs"), 'error') sell = false  FreezeEntityPosition(targ, false)  ClearPedTasks(targ) active = false return false end
     TaskGoToCoordAnyMeans(targ, GetEntityCoords(PlayerPedId()), 1.0, 0, 0, 0, 0)
     active = true
     repeat
@@ -61,12 +61,12 @@ function Cornersell()
     lib.requestAnimDict("rcmme_tracey1")
     TaskStartScenarioInPlace(targ, "WORLD_HUMAN_STAND_IMPATIENT_UPRIGHT", 0, false) FreezeEntityPosition(targ, true)
     AddMultiModel(data.ped, {
-        { label = string.format(Lang.targets.CornerSell.sell, data.amount, GetLabel(data.item), data.price), icon ="fa-solid fa-money-bill",
+        { label = string.format(locale("targets.CornerSell.sell"), data.amount, GetLabel(data.item), data.price), icon ="fa-solid fa-money-bill",
             action =   function() sellDrug(data.item, data.amount, data.price, targ) end,
             canInteract = function()
                 if not targbusy then return true end end,
         },
-        { label = Lang.targets.CornerSell.deny, icon = "fa-solid fa-person-harassing",
+        { label = locale("targets.CornerSell.deny"), icon = "fa-solid fa-person-harassing",
             action =    function() deny(targ) end,
             canInteract = function()
             if not targbusy then return true end end,
@@ -77,29 +77,29 @@ function Cornersell()
         timer = timer - 1
     until sold or timer == 0
     if sold then sold = false return true end
-    if timer == 0 then Notify(Lang.Cornerselling.timeout, 'error') targbusy = true walkAway(targ)  return false end
+    if timer == 0 then Notify(locale("Cornerselling.timeout"), 'error') targbusy = true walkAway(targ)  return false end
 end
 
 RegisterNetEvent('md-drugs:client:cornerselling', function()
     if not GetCops(QBConfig.MinimumDrugSalePolice) then return end
-    if inZone then Notify(Lang.Cornerselling.no, 'error') return end
+    if inZone then Notify(locale("Cornerselling.no"), 'error') return end
     local has = lib.callback.await('md-drugs:server:hasDrugs', false)
     if has then
         if sell then
             TriggerServerEvent('md-drugs:server:cornerselling:stop')
-            Notify(Lang.Cornerselling.stop, 'error')
+            Notify(locale("Cornerselling.stop"), 'error')
             sell = false
             active = false
         else
             sell = true
-            Notify(Lang.Cornerselling.start, 'success')
+            Notify(locale("Cornerselling.start"), 'success')
             repeat
                 Wait(1000)
                 Cornersell()
             until not sell
         end
     else
-        Notify(Lang.Cornerselling.nodrugs, 'error')
+        Notify(locale("Cornerselling.nodrugs"), 'error')
     end
 end)
 

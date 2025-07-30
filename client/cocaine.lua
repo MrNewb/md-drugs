@@ -3,7 +3,7 @@ local cuttingcoke = nil
 local baggingcoke = nil
 
 local function pick(loc)
-    if not progressbar(Lang.Coke.picking, 4000, 'uncuff') then return end
+    if not progressbar(locale("Coke.picking"), 4000, 'uncuff') then return end
         TriggerServerEvent("coke:pickupCane", loc)  
     return true
 end
@@ -14,7 +14,7 @@ RegisterNetEvent('coke:respawnCane', function(loc)
     if not CocaPlant[loc] then
         CocaPlant[loc] = CreateObject(hash, v.location, false, true, true)
         Freeze(CocaPlant[loc], true, v.heading)
-        AddSingleModel(CocaPlant[loc], {icon = "fa-solid fa-seedling", label = Lang.targets.coke.pick, action = function() if not pick(loc) then return end end}, loc)
+        AddSingleModel(CocaPlant[loc], {icon = "fa-solid fa-seedling", label = locale("targets.coke.pick"), action = function() if not pick(loc) then return end end}, loc)
     end
 end)
 
@@ -30,7 +30,7 @@ RegisterNetEvent("coke:init", function()
         if not v.taken then
             CocaPlant[k] = CreateObject(hash, v.location.x, v.location.y, v.location.z, false, true, true)
             Freeze(CocaPlant[k], true, v.heading)
-            AddSingleModel(CocaPlant[k], {icon = "fa-solid fa-seedling", label = Lang.targets.coke.pick, action = function() if not pick(k) then return end end}, k)
+            AddSingleModel(CocaPlant[k], {icon = "fa-solid fa-seedling", label = locale("targets.coke.pick"), action = function() if not pick(k) then return end end}, k)
         end
     end
 end)
@@ -48,7 +48,7 @@ end)
 
 RegisterNetEvent("md-drugs:client:makepowder", function(data)
     if not ItemCheck('coca_leaf') then return end
-    if not progressbar(Lang.Coke.makepow, 4000, 'uncuff') then return end
+    if not progressbar(locale("Coke.makepow"), 4000, 'uncuff') then return end
 	TriggerServerEvent("md-drugs:server:makepowder", data.data)
 end)
 
@@ -58,7 +58,7 @@ RegisterNetEvent("md-drugs:client:cutcokeone", function(data)
     if Config.FancyCokeAnims then
 	    CutCoke()
     else
-         if not progressbar(Lang.Coke.cutting, 5000, 'uncuff') then cuttingcoke = nil return end
+         if not progressbar(locale("Coke.cutting"), 5000, 'uncuff') then cuttingcoke = nil return end
     end
 	TriggerServerEvent("md-drugs:server:cutcokeone", data.data)
 	cuttingcoke = nil
@@ -70,7 +70,7 @@ RegisterNetEvent("md-drugs:client:bagcoke", function(data)
     if Config.FancyCokeAnims then
 	    BagCoke()
     else
-        if not progressbar(Lang.Coke.bagging, 5000, 'uncuff') then baggingcoke = nil return end
+        if not progressbar(locale("Coke.bagging"), 5000, 'uncuff') then baggingcoke = nil return end
     end
 	TriggerServerEvent("md-drugs:server:bagcoke", data.data)
 	baggingcoke = nil
@@ -79,12 +79,12 @@ end)
 CreateThread(function()
     local config = lib.callback.await('md-drugs:server:getLocs', false)
     if Config.FancyCokeAnims == false then 
-        AddBoxZoneMulti('cuttcoke', config.CuttingCoke,  {	type = "client",event = "md-drugs:client:cutcokeone",	icon = "fa-solid fa-mortar-pestle",  label = Lang.targets.coke.cut}) 
-        AddBoxZoneMulti('baggcoke', config.BaggingCoke,  {	type = "client",event = "md-drugs:client:bagcoke",	    icon = "fa-solid fa-sack-xmark",  label = Lang.targets.coke.bag})
+        AddBoxZoneMulti('cuttcoke', config.CuttingCoke,  {	type = "client",event = "md-drugs:client:cutcokeone",	icon = "fa-solid fa-mortar-pestle",  label = locale("targets.coke.cut")}) 
+        AddBoxZoneMulti('baggcoke', config.BaggingCoke,  {	type = "client",event = "md-drugs:client:bagcoke",	    icon = "fa-solid fa-sack-xmark",  label = locale("targets.coke.bag")})
     else
         AddBoxZoneSingle('cutcoke', config.singleSpot.cutcoke,
-		    { data = config.singleSpot.cutcoke,  type = "client", event = "md-drugs:client:cutcokeone", icon = "fa-solid fa-mortar-pestle", label = Lang.targets.coke.cut, canInteract = function() if cuttingcoke == nil and baggingcoke == nil then return true end end })
+		    { data = config.singleSpot.cutcoke,  type = "client", event = "md-drugs:client:cutcokeone", icon = "fa-solid fa-mortar-pestle", label = locale("targets.coke.cut"), canInteract = function() if cuttingcoke == nil and baggingcoke == nil then return true end end })
         AddBoxZoneSingle('bagcokepowder', config.singleSpot.bagcokepowder,
-		    { data = config.singleSpot.bagcokepowder, type = "client", event = "md-drugs:client:bagcoke",    icon = "fa-solid fa-sack-xmark", label = Lang.targets.coke.bag, canInteract = function() if baggingcoke == nil and cuttingcoke == nil then return true end end })
+		    { data = config.singleSpot.bagcokepowder, type = "client", event = "md-drugs:client:bagcoke",    icon = "fa-solid fa-sack-xmark", label = locale("targets.coke.bag"), canInteract = function() if baggingcoke == nil and cuttingcoke == nil then return true end end })
     end
 end)

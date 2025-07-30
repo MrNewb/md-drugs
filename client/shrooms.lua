@@ -11,7 +11,7 @@ local function LoadModels(hash)
 end
 
 local function pick(loc)
-    if not progressbar(Lang.Shrooms.pick, 4000, 'uncuff') then return end  
+    if not progressbar(locale("Shrooms.pick"), 4000, 'uncuff') then return end
     TriggerServerEvent("shrooms:pickupCane", loc)
 end
 
@@ -21,7 +21,7 @@ RegisterNetEvent('shrooms:respawnCane', function(loc)
     if not shrooms[loc] then
         shrooms[loc] = CreateObject(hash, v.location, false, true, true)
         Freeze(shrooms[loc], true, v.heading)
-        AddSingleModel(shrooms[loc],{ icon = "fas fa-hand", label = Lang.targets.shrooms.pick, action = function() pick(loc) end }, loc )
+        AddSingleModel(shrooms[loc],{ icon = "fas fa-hand", label = locale("targets.shrooms.pick"), action = function() pick(loc) end }, loc )
     end
 end)
 
@@ -48,13 +48,13 @@ RegisterNetEvent("shrooms:init", function()
         if not v.taken then
             shrooms[k] = CreateObject(hash, v.location.x, v.location.y, v.location.z, false, true, true)
             Freeze(shrooms[k], true, v.heading)
-            AddSingleModel(shrooms[k],{ icon = "fas fa-hand", label = Lang.targets.shrooms.pick, action = function() pick(k) end }, k )
+            AddSingleModel(shrooms[k],{ icon = "fas fa-hand", label = locale("targets.shrooms.pick"), action = function() pick(k) end }, k )
         end
     end
 end)
 
 RegisterNetEvent('md-drugs:client:takeshrooms', function()
-    if not progressbar(Lang.Shrooms.eat, 500, 'eat')  then return end              
+    if not progressbar(locale("Shrooms.eat"), 500, 'eat')  then return end
     TriggerEvent("evidence:client:SetStatus", "widepupils", 300)
     EcstasyEffect()
 end)

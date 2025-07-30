@@ -16,16 +16,16 @@ local function SpawnDealer()
         dealer[k] = CreatePed(0, Ped,loc.x,loc.y, loc.z-1, loc.h, false, false)
         Freeze(dealer[k], true, loc.h)
         AddMultiModel(dealer[k], {
-        { icon = 'fas fa-user-secret', label = string.format(Lang.targets.Delivery.Deliver, v.name),
+        { icon = 'fas fa-user-secret', label = locale("targets.Delivery.Deliver", v.name),
             action = function()
                 local bool, item, amount, coords = lib.callback.await('md-drugs:server:GetDeliveryItem', false, k)
                 if bool then 
-                    Email(Lang.Delivery.emailn, Lang.Delivery.emailsub, string.format(Lang.Delivery.emailcon, amount, GetLabel(item)))
+                    Email(locale("Delivery.emailn"), locale("Delivery.emailsub"), locale("Delivery.emailcon", amount, GetLabel(item)))
                     TriggerEvent('md-drugs:client:setLocation', {bool = bool, item = item, amount = amount, coords = coords})
                 end
             end,
         },
-        { icon = "fa-solid fa-store", label = string.format(Lang.targets.Delivery.open, v.name),
+        { icon = "fa-solid fa-store", label = locale("targets.Delivery.open", v.name),
             action =   function()   TriggerEvent('md-drugs:client:opendealermenu') end,
          }}, dealer[k])
     end
@@ -48,9 +48,9 @@ RegisterNetEvent('md-drugs:client:setLocation', function(data)
     Freeze(Buyer, true, coord.w)
     AddSingleModel(Buyer,  {
         icon = 'fas fa-user-secret',
-        label = Lang.targets.Delivery.hand,
+        label = locale("targets.Delivery.hand"),
         action = function()
-           if not progressbar(Lang.Delivery.pack, 4000, 'uncuff') then return end
+           if not progressbar(locale("Delivery.pack"), 4000, 'uncuff') then return end
            isActive = false
            DeletePed(Buyer)
            TriggerServerEvent('md-drugs:server:giveDeliveryItems', data.item, data.amount) 

@@ -17,14 +17,25 @@ server_scripts {
 shared_scripts {
 	'shared/config.lua',
 	'@ox_lib/init.lua',
+	'shared/init.lua',
 	'shared/**.lua',
 }
 
 lua54 'yes'
 
 files {
+	'locales/*.*',
     'stream/mushroom.ytyp',
     'stream/mushroom.ydr'
 }
 
 data_file 'DLC_ITYP_REQUEST' 'stream/mushroom.ytyp'
+
+dependencies {
+	'/server:6116',
+	'/onesync',
+	'bob74_ipl',
+	'oxmysql',
+	'community_bridge',
+	'ox_lib',
+}

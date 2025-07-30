@@ -3,8 +3,8 @@ local miss = false
 RegisterNetEvent("md-drugs:client:GetLocation", function(drug)
     if not GetCops(Config.PoliceCount) then return end
     if miss then
-       Notify(Lang.Wholesale.al, 'error')
-    else   
+       Notify(locale("Wholesale.al"), 'error')
+    else
        local loc = drug.location
        local timer = 0
        miss = true
@@ -15,7 +15,7 @@ RegisterNetEvent("md-drugs:client:GetLocation", function(drug)
        FreezeEntityPosition(drugdealer, true)
        SetEntityInvincible(drugdealer, true)
        AddMultiModel(drugdealer, {{
-           label = Lang.targets.Wholesale.talk,
+           label = locale("targets.Wholesale.talk"),
            icon = "fas fa-eye",
            action = function()
                 local luck = math.random(1,100)
