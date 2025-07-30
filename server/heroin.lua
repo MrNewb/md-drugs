@@ -62,7 +62,7 @@ end)
 RegisterServerEvent('md-drugs:server:dryplant', function(num)
 	local src = source
 	if not checkLoc(source, 'dryplant', num) then return end
-	if not Itemcheck(source, 'poppyresin', 1) then return end
+	if not ValidateItemCount(source, 'poppyresin', 1) then return end
 	if Config.TierSystem then
 		local heroin = getRep(src, 'heroin')
 		if heroin <= Config.Tier1 then
@@ -81,7 +81,7 @@ RegisterServerEvent('md-drugs:server:cutheroin', function(num)
 	local src = source
     local Player = getPlayer(src)
 	if not checkLoc(source, 'cutheroinone', num) then return end
-	if not Itemcheck(src, 'bakingsoda', 1) then return end
+	if not ValidateItemCount(src, 'bakingsoda', 1) then return end
 	if Config.TierSystem then
 		local rawh = Player.Functions.GetItemByName('heroin')
 		local rawh2 = Player.Functions.GetItemByName('heroinstagetwo')
@@ -93,7 +93,7 @@ RegisterServerEvent('md-drugs:server:cutheroin', function(num)
 		elseif rawh3 then
 			if not GetRecipe(src, 'heroin', 'cutheroin', 'tier3') then return end
 		else
-			Notifys(src, Lang.Heroin.noheroin, "error")
+			Notify(src, Lang.Heroin.noheroin, "error")
 		end
 	else
 		if not GetRecipe(src, 'heroin', 'cutheroin', 'tier1') then return end
@@ -105,11 +105,11 @@ RegisterServerEvent('md-drugs:server:getheroinlabkit', function()
 	local Player = getPlayer(src)
 	if not checkLoc(source, 'singleSpot', 'buyheroinlabkit') then return end
 	local has = Player.Functions.GetItemByName('heroinlabkit')
-	if has then Notifys(src, Lang.Heroin.haskit, 'error') return end
+	if has then Notify(src, Lang.Heroin.haskit, 'error') return end
 	if Player.Functions.RemoveMoney('cash', prices.heroinlabkitprice) then
 		AddItem(src, 'heroinlabkit', 1)
 	else
-		Notifys(src, 'You Need '.. prices.heroinlabkitprice .. ' In Cash For This', 'error')
+		Notify(src, 'You Need '.. prices.heroinlabkitprice .. ' In Cash For This', 'error')
 	end
 end)
 
@@ -137,10 +137,10 @@ RegisterServerEvent('md-drugs:server:getheroinlabkitback', function()
 end)
 
 
-CUI('heroinlabkit', function(source, item)
+RegisterUsableItems('heroinlabkit', function(source, item)
 	local src = source
 	local Player = getPlayer(src)
-	if not Itemcheck(source, 'heroinlabkit', 1) then return end
+	if not ValidateItemCount(source, 'heroinlabkit', 1) then return end
 	local placed, loc = lib.callback.await('md-drugs:client:setheroinlabkit', src)
 	if placed then 
 		RemoveItem(src, 'heroinlabkit', 1)
@@ -148,9 +148,9 @@ CUI('heroinlabkit', function(source, item)
 			src = src, 
 			ownerid = Player.PlayerData.citizenid,
 			coords = loc,
-			name = GetName(src)
+			name = GetPlayerFrameworkName(src)
 		})
-		Notifys(src, Lang.Heroin.placed, "success")
+		Notify(src, Lang.Heroin.placed, "success")
 	end
 end)
 
@@ -158,7 +158,7 @@ RegisterServerEvent('md-drugs:server:heatliquidheroin', function()
 local src = source
 local Player = getPlayer(src) 
 	if not hasHKit(src) then return end
-	if not Itemcheck(source, 'emptyvial', 1) then return end
+	if not ValidateItemCount(source, 'emptyvial', 1) then return end
 	if Config.TierSystem then
 		local cuth = Player.Functions.GetItemByName('heroincut')
 		local cuth2 = Player.Functions.GetItemByName('heroincutstagetwo')
@@ -170,7 +170,7 @@ local Player = getPlayer(src)
 		elseif cuth3 then
 			if not GetRecipe(src, 'heroin', 'fillvial', 'tier3') then return end
 		else
-			Notifys(src, 'no cut heroin', "error")
+			Notify(src, 'no cut heroin', "error")
 		end
 	else
 		if not GetRecipe(src, 'heroin', 'fillvial', 'tier1') then return end
@@ -186,13 +186,13 @@ local cuth2 = Player.Functions.GetItemByName('heroincutstagetwo')
 local cuth3 = Player.Functions.GetItemByName('heroincutstagethree')
 	if cuth then
 		RemoveItem(src, 'heroincut', 1) 
-		Notifys(src,Lang.Heroin.fail, "error")
+		Notify(src,Lang.Heroin.fail, "error")
 	elseif cuth2 then
 		RemoveItem(src, 'heroincutstagetwo', 1) 
-		Notifys(src,Lang.Heroin.fail, "error")
+		Notify(src,Lang.Heroin.fail, "error")
 	elseif cuth3 then
 		RemoveItem(src, 'heroincutstagethree', 1)
-		Notifys(src,Lang.Heroin.fail, "error")
+		Notify(src,Lang.Heroin.fail, "error")
 	end
 end)
 
@@ -200,7 +200,7 @@ RegisterServerEvent('md-drugs:server:fillneedle', function(num)
 	local src = source
     local Player = getPlayer(src)
 	if not checkLoc(source, 'fillneedle', num) then return end
-	if not Itemcheck(src, 'needle', 1) then return end
+	if not ValidateItemCount(src, 'needle', 1) then return end
 	if Config.TierSystem then
 		local heroin = getRep(src, 'heroin')
 		local vh = Player.Functions.GetItemByName('heroinvial')
@@ -216,7 +216,7 @@ RegisterServerEvent('md-drugs:server:fillneedle', function(num)
 			if not GetRecipe(src, 'heroin', 'fillneedle', 'tier3') then return end
 			AddRep(src, 'heroin')
 		else
-			Notifys(src,Lang.Heroin.nofill, "error")
+			Notify(src,Lang.Heroin.nofill, "error")
 		end
 	else
 		if not GetRecipe(src, 'heroin', 'fillneedle', 'tier1') then return end
@@ -226,7 +226,7 @@ end)
 RegisterServerEvent('md-drugs:server:failheroin', function()
 	local src = source
     local Player = getPlayer(src)
-	Log(GetName(src) ..' Sucks And Burned Their Heroin', 'heroin')
+	Log(GetPlayerFrameworkName(src) ..' Sucks And Burned Their Heroin', 'heroin')
 	if Config.TierSystem then
 		local vh = Player.Functions.GetItemByName('heroinvial')
 		local vh2 = Player.Functions.GetItemByName('heroinvialstagetwo')

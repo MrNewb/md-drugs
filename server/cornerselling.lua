@@ -130,7 +130,7 @@ lib.callback.register('md-drugs:server:cornerselling:getAvailableDrugs', functio
         local item = Player.Functions.GetItemByName(k)
         if item and type == 0 then
             type = type + 1
-            Log(GetName(source)  .. ' Allowed To Sell ' .. item.name .. '!' , 'cornerselling')
+            Log(GetPlayerFrameworkName(source)  .. ' Allowed To Sell ' .. item.name .. '!' , 'cornerselling')
             local amount = math.random(1,item.amount)
             if amount >= 15 then amount = 15 end
             local price = math.random(Drugs[k]['min'], Drugs[k]['max']) * amount
@@ -182,7 +182,7 @@ RegisterNetEvent('md-drugs:server:sellCornerDrugs', function(item, amount, price
                                 Player.Functions.AddMoney('cash', price)
                             end
                             AddRep(src, 'cornerselling', Drugs[item].rep * amount)
-                            Log(GetName(src)  .. ' Sold ' .. amount .. ' Of ' .. item .. ' For A Price Of ' .. price .. '!' , 'cornerselling')
+                            Log(GetPlayerFrameworkName(src)  .. ' Sold ' .. amount .. ' Of ' .. item .. ' For A Price Of ' .. price .. '!' , 'cornerselling')
                             table.remove(DrugDeals, k)
                         end
                     end
@@ -199,7 +199,7 @@ lib.addCommand('cornersell', {
 }, function(source, args, raw)
     local src = source
     local Player = getPlayer(src)
-    Log(GetName(source)  .. ' Used Command cornersell!' , 'cornerselling')
+    Log(GetPlayerFrameworkName(source)  .. ' Used Command cornersell!' , 'cornerselling')
     TriggerClientEvent('md-drugs:client:cornerselling', src)
 end)
 

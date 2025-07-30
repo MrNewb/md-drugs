@@ -16,13 +16,13 @@ local Price = {
 }
 
 for k, v in pairs (burners) do 
-    CUI(k, function(source, item)
+    RegisterUsableItems(k, function(source, item)
         local src = source
         local Player = getPlayer(src)
-        if getCops() < Config.PoliceCount then return Notifys(src, Lang.Wholesale.na, 'error') end
+        if GetPoliceOnline() < Config.PoliceCount then return Notify(src, Lang.Wholesale.na, 'error') end
         for m, d in pairs (active) do 
             if d.cid == Player.PlayerData.citizenid then
-                return Notifys(src, Lang.Wholesale.al, 'error' )
+                return Notify(src, Lang.Wholesale.al, 'error' )
             end
         end
         local tab = ''

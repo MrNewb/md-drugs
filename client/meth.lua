@@ -7,74 +7,67 @@ local function startcook()
 	if not VerifyPlayerHasItem('empty_weed_bag') then return end
 	if not VerifyPlayerHasItem('acetone') then return end
 	if not VerifyPlayerHasItem('ephedrine') then return end
-	if amonia == nil then
-		active = true
-		TriggerServerEvent("md-drugs:server:startcook")
-		MethCooking()
-		amonia = true
-	else
-		Notify(locale("meth.inside"), "error")
-	end
+	if amonia ~= nil then return Notify(locale("meth.inside"), "error") end
+	active = true
+	TriggerServerEvent("md-drugs:server:startcook")
+	MethCooking()
+	amonia = true
 end
 
 local function dials()
-	if amonia == true then
-		if not ReturnMinigameSuccess() then
-			AddExplosion(1005.773, -3200.402, -38.524, 49, 10, true, false, true)
-			ClearPedTasks(PlayerPedId())
-			amonia = nil
-			active = nil
-			return
-		end
-		Notify(locale("meth.increaseheat"), "success")
+	if amonia ~= true then return end
+	if not ReturnMinigameSuccess() then
+		AddExplosion(1005.773, -3200.402, -38.524, 49, 10, true, false, true)
 		ClearPedTasks(PlayerPedId())
-		heated = true
-	else
+		amonia = nil
+		active = nil
+		return
 	end
+	Notify(locale("meth.increaseheat"), "success")
+	ClearPedTasks(PlayerPedId())
+	heated = true
 end
 
 local function smash()
-	if tray then
-		tray = false
-		DeleteObject(trays)
-		local bucket = CreateObject("bkr_prop_meth_bigbag_03a", vector3(1012.85, -3194.29, -39.2), true, true, true)
-		Freeze(bucket, true, 90.0)
-		SmashMeth()
-		Wait(100)
-		AddSingleModel(bucket,
-			{
-				name = 'bucket',
-				icon = "fa-solid fa-sack-xmark",
-				label = locale("targets.meth.bag"),
-				canInteract = function() if active == nil then return false end end,
-				action = function()
-					active = nil
-					DeleteObject(bucket)
-					amonia = nil
-					heated = nil
-					tray = nil
-					BagMeth()
-					TriggerServerEvent('md-drugs:server:getmeth')
-				end,
-			}, bucket)
-	end
+	if not tray then return end
+	tray = false
+	DeleteObject(trays)
+	local bucket = CreateObject("bkr_prop_meth_bigbag_03a", vector3(1012.85, -3194.29, -39.2), true, true, true)
+	Freeze(bucket, true, 90.0)
+	SmashMeth()
+	Wait(100)
+	AddSingleModel(bucket,
+	{
+		name = 'bucket',
+		icon = "fa-solid fa-sack-xmark",
+		label = locale("targets.meth.bag"),
+		canInteract = function() if active == nil then return false end end,
+		action = function()
+			active = nil
+			DeleteObject(bucket)
+			amonia = nil
+			heated = nil
+			tray = nil
+			BagMeth()
+			TriggerServerEvent('md-drugs:server:getmeth')
+		end,
+	}, bucket)
 end
 
 local function trayscarry()
-	if amonia then
-		local pos = GetEntityCoords(PlayerPedId(), true)
-		RequestAnimDict('anim@heists@box_carry@')
-		while (not HasAnimDictLoaded('anim@heists@box_carry@')) do
-			Wait(7)
-		end
-		TaskPlayAnim(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 5.0, -1, -1, 50, 0, false, false,
-			false)
-		RegisterModelRequest("bkr_prop_meth_tray_02a")
-		trays = CreateObject("bkr_prop_meth_tray_02a", pos.x, pos.y, pos.z, true, true, true)
-		AttachEntityToEntity(trays, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 28422), 0.01, -0.2,
-			-0.2, 20.0, 0.0, 0.0, true, true, false, true, 1, true)
-		tray = true
+	if not amonia then return end
+	local pos = GetEntityCoords(PlayerPedId(), true)
+	RequestAnimDict('anim@heists@box_carry@')
+	while (not HasAnimDictLoaded('anim@heists@box_carry@')) do
+		Wait(7)
 	end
+	TaskPlayAnim(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 5.0, -1, -1, 50, 0, false, false,
+		false)
+	RegisterModelRequest("bkr_prop_meth_tray_02a")
+	trays = CreateObject("bkr_prop_meth_tray_02a", pos.x, pos.y, pos.z, true, true, true)
+	AttachEntityToEntity(trays, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 28422), 0.01, -0.2,
+		-0.2, 20.0, 0.0, 0.0, true, true, false, true, 1, true)
+	tray = true
 end
 
 

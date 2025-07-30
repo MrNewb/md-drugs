@@ -54,10 +54,10 @@ RegisterNetEvent("md-drugs:server:drymescaline", function()
     if not GetRecipe(src, 'mescaline', 'dry', 'dried') then return end
 end)
 
-CUI("driedmescaline", function(source, item)
+RegisterUsableItems("driedmescaline", function(source, item)
     local src = source
     if RemoveItem(src, "driedmescaline", 1) then 
 	    TriggerClientEvent("md-drugs:client:takemescaline", src)
-        Log(GetName(source) .. ' Consumed Mescaline', 'consume')
+        Log(GetPlayerFrameworkName(source) .. ' Consumed Mescaline', 'consume')
     end
 end)

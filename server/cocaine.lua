@@ -125,12 +125,12 @@ end)
 
 local cokecut = {loosecokestagetwo = 2, loosecokestagethree = 3}
 for k, v in pairs (cokecut) do
-	CUI(k, function(source, item)
+	RegisterUsableItems(k, function(source, item)
 		local src = source
 		local Player = getPlayer(src)
-        if not Player.Functions.GetItemByName('bakingsoda') then Notifys(src, 'You Need Baking Soda For this', 'error') return end
+        if not Player.Functions.GetItemByName('bakingsoda') then Notify(src, 'You Need Baking Soda For this', 'error') return end
 		 if Player.Functions.GetItemByName(item.name) then
-		    if not Itemcheck(src, 'bakingsoda', 1) then return end
+		    if not ValidateItemCount(src, 'bakingsoda', 1) then return end
              local check = lib.callback.await('md-drugs:client:uncuff', src, 'Cutting It Further')
              if not check then return end
 		    if RemoveItem(src, k, 1) and RemoveItem(src, 'bakingsoda', 1) then

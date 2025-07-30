@@ -143,8 +143,8 @@ xanax =                   { anim = 'pill', effect = 'none', add = { stress = -40
 }
 
 for k, v in pairs(Consume) do
-    CUI(k, function(source, item)
-        if not Itemcheck(source, k, 1) then return end
+    RegisterUsableItems(k, function(source, item)
+        if not ValidateItemCount(source, k, 1) then return end
         local time = v.time or Consumables.defaulttime
         local effect = v.effect or 0
         local anim = v.anim or Consumables.defaultanim

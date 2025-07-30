@@ -6,18 +6,18 @@ local function GetJob(source)
 	if Player.PlayerData.job.type == 'ems' then
 		return true
 	else
-		Notifys(src, 'You Must Be EMS To Do This', 'error')
+		Notify(src, 'You Must Be EMS To Do This', 'error')
 		return false
 	end
 end
 
-CUI('prescription_pad', function(source, item)
+RegisterUsableItems('prescription_pad', function(source, item)
 	local src = source
 	local near = {}
 	if GetJob(src) then 
 		for k, v in pairs (QBCore.Functions.GetQBPlayers()) do
 			local targ = QBCore.Functions.GetPlayerByCitizenId(v.PlayerData.citizenid) 
-			local tname = GetName(v.PlayerData.source)
+			local tname = GetPlayerFrameworkName(v.PlayerData.source)
 			local ped, tped = GetPlayerPed(src), GetPlayerPed(v.PlayerData.source)
 			local dist = #(GetEntityCoords(ped) - GetEntityCoords(tped)) 
 			if dist < 5.0 then
@@ -39,7 +39,7 @@ end)
 
 local pharmabottle = {'vicodinbottle', 'adderalbottle','morphinebottle','xanaxbottle'}
 for m, d in pairs (pharmabottle) do
-CUI(d, function(source, item)
+RegisterUsableItems(d, function(source, item)
 	local src = source
 	local Player = getPlayer(src)
 	local check = lib.callback.await("md-drugs:client:unbottle", src)
@@ -54,8 +54,8 @@ CUI(d, function(source, item)
 			if d == k then
 				RemoveItem(src, d, 1)
 				AddItem(src, v, math.random(10,30))
-				Notifys(src,Lang.Pharma.unbottle, "success")
-				Log(GetName(src) .. ' Unbottled 30 Of ' .. v .. '!', 'pharma')
+				Notify(src,Lang.Pharma.unbottle, "success")
+				Log(GetPlayerFrameworkName(src) .. ' Unbottled 30 Of ' .. v .. '!', 'pharma')
 			end
 		end
 	end
@@ -73,5 +73,5 @@ RegisterServerEvent('md-drugs:server:fillprescription', function()
 			break
 		end
 	end
-	Log(GetName(src) .. ' Filled A Prescription!', 'pharma')
+	Log(GetPlayerFrameworkName(src) .. ' Filled A Prescription!', 'pharma')
 end)

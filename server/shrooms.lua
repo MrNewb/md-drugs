@@ -46,16 +46,16 @@ RegisterNetEvent("shrooms:pickupCane", function(loc)
         TriggerClientEvent("shrooms:removeCane", -1, loc)
         shroomsCooldown(loc)
         AddItem(source, 'shrooms', 1)
-        Log(GetName(source) .. ' Picked A Shroom With a distance of ' .. dist(source,s[loc].location) .. ' vectors', 'shrooms')
+        Log(GetPlayerFrameworkName(source) .. ' Picked A Shroom With a distance of ' .. dist(source,s[loc].location) .. ' vectors', 'shrooms')
     end
 end)
 
-CUI('shrooms', function(source, item)
+RegisterUsableItems('shrooms', function(source, item)
 local src = source
 if TriggerClientEvent('md-drugs:client:takeshrooms', src, item.name) then
 	RemoveItem(src, 'shrooms', 1)
-    Log(GetName(source) .. ' Took Some Mushrooms', 'shrooms')
-    Notifys(src, 'You Took Some Shrooms!', 'success')
+    Log(GetPlayerFrameworkName(source) .. ' Took Some Mushrooms', 'shrooms')
+    Notify(src, 'You Took Some Shrooms!', 'success')
 	end
 end)
 

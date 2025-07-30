@@ -20,14 +20,14 @@ RegisterServerEvent('md-drugs:server:getdiethylamide', function(num)
 end)
 
 
-CUI('lsdlabkit', function(source, item)
+RegisterUsableItems('lsdlabkit', function(source, item)
 	local src = source
 	local Player = getPlayer(src)
 	local placed, loc = lib.callback.await('md-drugs:client:setlsdlabkit', src)
 	if placed then 
 		if RemoveItem(src, 'lsdlabkit', 1) then
 			table.insert(lsdTables, {
-				owner = GetName(src),
+				owner = GetPlayerFrameworkName(src),
 				ownerid = Player.PlayerData.citizenid,
 				src = src,
 				loc = loc
@@ -48,7 +48,7 @@ end
 
 lib.callback.register('md-drugs:server:removecleaningkit', function(source)
 	local src = source
-	if not Itemcheck(src, 'cleaningkit', 1) then return end
+	if not ValidateItemCount(src, 'cleaningkit', 1) then return end
 	if RemoveItem(src,"cleaningkit", 1) then 
 		return true
 	end
@@ -76,15 +76,15 @@ RegisterServerEvent('md-drugs:server:failheating', function()
 	if not hasLabKit(src) then return end
 	RemoveItem(src, 'lysergic_acid', 1)
 	RemoveItem(src, 'diethylamide', 1)
-	Notifys(src,Lang.lsd.failed, "error")
-	Log(GetName(src) ..' Failed Basic LSD Like An Idiot!', 'lsd')
+	Notify(src,Lang.lsd.failed, "error")
+	Log(GetPlayerFrameworkName(src) ..' Failed Basic LSD Like An Idiot!', 'lsd')
 end)
 
 
 RegisterServerEvent('md-drugs:server:refinequalityacid', function()
 local src = source
 if not hasLabKit(src) then return end
-if not Itemcheck(src, 'lsd_one_vial', 1) then return end
+if not ValidateItemCount(src, 'lsd_one_vial', 1) then return end
 	if Config.TierSystem then
 		local lsd = getRep(src, 'lsd')
 		if RemoveItem(src, 'lsd_one_vial', 1) then 
@@ -100,7 +100,7 @@ if not Itemcheck(src, 'lsd_one_vial', 1) then return end
 				AddItem(src,'lsd_vial_six', 1)
 			end
 			AddRep(src,'lsd')
-			Log(GetName(src) ..' Refined Acid and Now Has A Rep Of ' .. lsd + 1 .. '!', 'lsd')
+			Log(GetPlayerFrameworkName(src) ..' Refined Acid and Now Has A Rep Of ' .. lsd + 1 .. '!', 'lsd')
 		end
 	else
 		local randomchance = math.random(1,100)
@@ -116,7 +116,7 @@ if not Itemcheck(src, 'lsd_one_vial', 1) then return end
 			else 
 				AddItem(src,'lsd_vial_six', 1)
 			end
-			Log(GetName(src) ..' Refined Acid!', 'lsd')
+			Log(GetPlayerFrameworkName(src) ..' Refined Acid!', 'lsd')
 		end
 	end
 end)
@@ -124,7 +124,7 @@ end)
 RegisterServerEvent('md-drugs:server:failrefinequality', function()
 	local src = source
 	if not hasLabKit(src) then return end
-	if not Itemcheck(src, 'lsd_one_vial', 1) then return end
+	if not ValidateItemCount(src, 'lsd_one_vial', 1) then return end
 	RemoveItem(src,'lsd_one_vial', 1)  
 end)
 
@@ -136,7 +136,7 @@ RegisterServerEvent('md-drugs:server:gettabpaper', function(num)
 	if Player.Functions.RemoveMoney('cash', prices.tabcost * 10) then
 		AddItem(src,'tab_paper', 10)
 	else
-		Notifys(Lang.lsd.broke, "error")
+		Notify(Lang.lsd.broke, "error")
 	end
 end)
  
@@ -147,7 +147,7 @@ RegisterServerEvent('md-drugs:server:getlabkit', function()
 	if Player.Functions.RemoveMoney('cash', prices.lsdlabkitcost) then
 		AddItem(src,'lsdlabkit', 1)
 	else
-		Notifys(src, Lang.lsd.broke, "error")
+		Notify(src, Lang.lsd.broke, "error")
 	end
 end)
 
@@ -155,7 +155,7 @@ RegisterServerEvent('md-drugs:server:maketabpaper', function()
 	local src = source
 	local Player = getPlayer(src)
 	if not hasLabKit(src) then return end
-	if not Itemcheck(src,'tab_paper', 1) then return end
+	if not ValidateItemCount(src,'tab_paper', 1) then return end
 	local count = 0
 	local items, recieve = nil, nil
 	local vialdata = {
@@ -195,13 +195,13 @@ local sheets = {
 }
 
 for k, v in pairs (sheets) do 
-	CUI(v.item, function(source)
+	RegisterUsableItems(v.item, function(source)
 		local src = source
 		local Player = getPlayer(src)
 		local math = math.random(1,10)
 		if RemoveItem(src, v.item, 1) then
 			AddItem(src, v.recieve, math)
-			Log(GetName(src) ..' Made ' .. math .. 'Tabs of ' .. v.recieve .. '!', 'lsd')
+			Log(GetPlayerFrameworkName(src) ..' Made ' .. math .. 'Tabs of ' .. v.recieve .. '!', 'lsd')
 		end
 	end)
 end

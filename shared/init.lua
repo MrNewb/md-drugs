@@ -4,6 +4,9 @@ function locale(message, ...)
     return Bridge.Language.Locale(message, ...)
 end
 
+function GetItemInfo(itemName)
+    return Bridge.Inventory.GetItemInfo(itemName)
+end
 
 if IsDuplicityVersion() then
     function InitializeSQL()
@@ -23,8 +26,45 @@ if IsDuplicityVersion() then
 
     AddEventHandler('onResourceStart', function(resourceName)
         if resourceName ~= GetCurrentResourceName() then return end
+        Bridge.Version.VersionChecker("Mustachedom/md-drugs", false)
         InitializeSQL()
     end)
+
+    AddItem = Bridge.Inventory.AddItem
+
+    RemoveItem = Bridge.Inventory.RemoveItem
+
+    function ValidateItemCount(src, item, count)
+        local itemCount = Bridge.Inventory.GetItemCount(src, item)
+        return itemCount >= count
+    end
+
+    function Notify(src, text, type)
+        return Bridge.Notify.SendNotify(src, text, type, 5000)
+    end
+
+    function RegisterUsableItems(item, useFunction)
+        Bridge.Framework.RegisterUsableItem(item, function(src, itemData)
+            local _src = src
+            -- fuck
+        end)
+    end
+
+    -- function RegisterUsableItems(item, useFunction)
+    --     QBCore.Functions.CreateUseableItem(item, useFunction)
+    -- end
+
+    function GetPlayerFrameworkName(src)
+        local first, last =  Bridge.Framework.GetPlayerName(src)
+        return string.format('%s %s', first, last)
+    end
+
+    GetPlayerFrameworkIdentifier = Bridge.Framework.GetPlayerIdentifier
+
+    SetPlayerFrameworkMetadata = Bridge.Framework.SetPlayerMetadata
+
+    GetPlayerFrameworkMetadata = Bridge.Framework.GetPlayerMetadata
+
 else
     -- Global Tables
     Mescaline = {}
@@ -112,10 +152,6 @@ else
             },
             jobs = { 'police' },
         })
-    end
-
-    function GetItemInfo(itemName)
-        return Bridge.Inventory.GetItemInfo(itemName)
     end
 
     function BeginProgressBar(label, duration, animation)

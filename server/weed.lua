@@ -61,7 +61,7 @@ RegisterNetEvent("weed:pickupCane", function(loc)
         TriggerClientEvent("weed:removeCane", -1, loc)
         WeedCooldown(loc)
         AddItem(source, 'wetcannabis', 1)
-		Log(GetName(source) .. ' Picked Weed With a distance of ' .. dist(source, weedPlant[loc].location) .. ' vectors', 'weed')
+		Log(GetPlayerFrameworkName(source) .. ' Picked Weed With a distance of ' .. dist(source, weedPlant[loc].location) .. ' vectors', 'weed')
     end
 end)
 --------------- events
@@ -71,21 +71,21 @@ RegisterServerEvent('md-drugs:server:dryoutweed', function()
     local Player = getPlayer(src)
 	if RemoveItem(src,"wetcannabis", 1) then
     	AddItem(src,"drycannabis", 1)
-		Log(GetName(source) .. ' Dried Weed', 'weed')
+		Log(GetPlayerFrameworkName(source) .. ' Dried Weed', 'weed')
     else
-		Notifys(src, Lang.Weed.nodry, "error")
+		Notify(src, Lang.Weed.nodry, "error")
 	end
 end)
 
 local bluntwrap = {'mdreddextro','mdlean'}
 for k, v in pairs (bluntwrap) do 
-	CUI(v, function(source, item) TriggerClientEvent('md-drugs:client:makeBluntWrap', source) end)
+	RegisterUsableItems(v, function(source, item) TriggerClientEvent('md-drugs:client:makeBluntWrap', source) end)
 end
 
 local bluntwraps = {'leanbluntwrap', 'dextrobluntwrap', 'bluntwrap'}
 
 for k, v in pairs (bluntwraps) do 
-	CUI(v, function(source, item) TriggerClientEvent('md-drugs:client:rollBlunt', source) end)
+	RegisterUsableItems(v, function(source, item) TriggerClientEvent('md-drugs:client:rollBlunt', source) end)
 end
 
 
@@ -104,7 +104,7 @@ RegisterServerEvent('md-drugs:server:makeoil', function(data)
 end)
 
 
-CUI("dabrig", function(source, item)
+RegisterUsableItems("dabrig", function(source, item)
     local src = source
     local Player = getPlayer(src)
 
@@ -113,15 +113,15 @@ CUI("dabrig", function(source, item)
         	TriggerClientEvent("md-drugs:client:dodabs", src)
         end
     else
-    	Notifys(src, 'You Need A Butane Torch', 'error')
+    	Notify(src, 'You Need A Butane Torch', 'error')
     end
 end)
 
-CUI("weedgrinder", function(source, item)
+RegisterUsableItems("weedgrinder", function(source, item)
     local src = source
     local Player = getPlayer(src)
     local has = Player.Functions.GetItemByName("drycannabis")
-    if not has then Notifys(src, 'You Need Dried Cannabis', 'error') return end
+    if not has then Notify(src, 'You Need Dried Cannabis', 'error') return end
     local check = lib.callback.await('md-drugs:client:uncuff', src, 'Grinding Weed')
     if not check then return end
     if RemoveItem(src, "drycannabis",1 ) then 
@@ -129,7 +129,7 @@ CUI("weedgrinder", function(source, item)
     end
 end)
 
-CUI("mdwoods", function(source, item)
+RegisterUsableItems("mdwoods", function(source, item)
 	local src = source
 	local Player = getPlayer(src)
     local check = lib.callback.await('md-drugs:client:uncuff', src, 'Breaking Blunt Open')

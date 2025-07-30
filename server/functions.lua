@@ -1,30 +1,30 @@
 local QBCore = exports['qb-core']:GetCoreObject()
-local notify = Config.Notify -- qb or ox
+local notify = Config.Notify       -- qb or ox
 local inventory = Config.Inventory -- qb or ox
 ------------------------------------------ logging stuff
-local logs = false 
+local logs = false
 local logapi = GetConvar("fivemerrLogs", "")
 local endpoint = 'https://api.fivemerr.com/v1/logs'
 local headers = {
-            ['Authorization'] = logapi,
-            ['Content-Type'] = 'application/json',
-    }
+    ['Authorization'] = logapi,
+    ['Content-Type'] = 'application/json',
+}
 
 CreateThread(function()
-if logs then 
-    print'^2 Logs Enabled for md-drugs'
-    if logapi == 'insert string here' then 
-        print'^1 homie you gotta set your api on line 4'
+    if logs then
+        print '^2 Logs Enabled for md-drugs'
+        if logapi == 'insert string here' then
+            print '^1 homie you gotta set your api on line 4'
+        else
+            print '^2 API Key Looks Good, Dont Trust Me Though, Im Not Smart'
+        end
     else
-        print'^2 API Key Looks Good, Dont Trust Me Though, Im Not Smart'
+        print '^1 logs disabled for md-drugs'
     end
-else
-    print'^1 logs disabled for md-drugs'
-end
 end)
 
 function Log(message, type)
-if logs == false then return end	
+    if logs == false then return end
     local buffer = {
         level = "info",
         message = message,
@@ -34,17 +34,18 @@ if logs == false then return end
             playerid = source
         }
     }
-     SetTimeout(500, function()
-         PerformHttpRequest(endpoint, function(status, _, _, response)
-             if status ~= 200 then 
-                 if type(response) == 'string' then
-                     response = json.decode(response) or response
-                 end
-             end
-         end, 'POST', json.encode(buffer), headers)
-         buffer = nil
-     end)
+    SetTimeout(500, function()
+        PerformHttpRequest(endpoint, function(status, _, _, response)
+            if status ~= 200 then
+                if type(response) == 'string' then
+                    response = json.decode(response) or response
+                end
+            end
+        end, 'POST', json.encode(buffer), headers)
+        buffer = nil
+    end)
 end
+
 ---------------------------------------------------- inventory catcher
 local invname = ''
 CreateThread(function()
@@ -53,22 +54,17 @@ CreateThread(function()
     elseif GetResourceState('qb-inventory') == 'started' then
         invname = 'qb-inventory'
     else
-        invname = 'inventory'		
+        invname = 'inventory'
     end
 end)
 ------------------------------------ Player Stuff functions
-function getPlayer(source) 
+function getPlayer(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     return Player
 end
 
-function GetName(source) 
-    local Player = getPlayer(source) 
-    return Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname
-end
-
-function GetCoords(source) 
+function GetCoords(source)
     local ped = GetPlayerPed(source)
     local playerCoords = GetEntityCoords(ped)
     return playerCoords
@@ -78,119 +74,32 @@ function dist(source, coords)
     local playerPed = GetPlayerPed(source)
     local pcoords = GetEntityCoords(playerPed)
     local dist = #(pcoords - coords)
-        return dist
+    return dist
 end
 
 function CheckDist(source, coords)
     local playerPed = GetPlayerPed(source)
     local pcoords = GetEntityCoords(playerPed)
-    local ok 
+    local ok
     if #(pcoords - coords) < 4.0 then
         return ok
-    else    
-        DropPlayer(source, 'md-drugs: You Were A Total Of ' .. #(pcoords - coords) .. ' Too Far Away To Trigger This Event') 
+    else
+        DropPlayer(source,
+            'md-drugs: You Were A Total Of ' .. #(pcoords - coords) .. ' Too Far Away To Trigger This Event')
         return false
     end
 end
 
-
-function Notifys(source, text, type)
+function getRep(source, type)
     local src = source
-    if notify == 'qb' then
-        TriggerClientEvent("QBCore:Notify", src, text, type)
-    elseif notify == 'ox' then
-        lib.notify(src, { title = text, type = type})
-    elseif notify == 'okok' then
-        TriggerClientEvent('okokNotify:Alert', src, '', text, 4000, type, false)
-    else
-        print"^1 Look At The Config For Proper Alert Options"    
-    end
-end
-
-function GetLabels(item) 
-    if inventory == 'qb' then
-        return QBCore.Shared.Items[item].label
-    elseif inventory == 'ox' then
-        local items = exports.ox_inventory:Items()
-        return items[item].label
-    end
-end
-
-function CUI(item, useFunction)
-    QBCore.Functions.CreateUseableItem(item, useFunction)
-end
-
-function Itemcheck(source, item, amount) 
-    if inventory == 'qb' then
-        local Player = getPlayer(source)
-        local itemchecks = Player.Functions.GetItemByName(item)
-        if itemchecks and itemchecks.amount >= amount then
-            return true
-        else 
-            Notifys(source, 'You Need ' .. amount .. ' Of ' .. GetLabels(item)  .. ' To Do this', 'error')
-            return false   
-        end
-    elseif inventory == 'ox' then
-       local items = exports.ox_inventory:GetItem(source, item, nil, false) 
-        if items.count >= amount then 
-                return true
-        else
-            Notifys(source, 'You Need ' .. amount .. ' Of ' .. GetLabels(item) .. ' To Do This', 'error')
-            return false
-        end
-    end
-end
-
-function RemoveItem(source, item, amount) 
-    if inventory == 'qb' then
-        local Player = getPlayer(source)
-        if Player.Functions.RemoveItem(item, amount) then 
-            TriggerClientEvent(invname ..":client:ItemBox", source, QBCore.Shared.Items[item], "remove", amount)  
-            return true
-        else 
-            Notifys(source, 'You Need ' .. amount .. ' Of ' .. GetLabels(item) .. ' To Do This', 'error')
-        end
-    elseif inventory == 'ox' then
-        if exports.ox_inventory:RemoveItem(source, item, amount) then 
-            return true
-        else
-            Notifys(source, 'You Need ' .. amount .. ' Of ' .. GetLabels(item) .. ' To Do This', 'error')
-        end
-    end
-end
-
-function AddItem(source, item, amount) 
-    if inventory == 'qb' then
-        local Player = getPlayer(source)
-        if Player.Functions.AddItem(item, amount) then 
-            TriggerClientEvent(invname ..":client:ItemBox", source, QBCore.Shared.Items[item], "add", amount) 
-            return true
-         else 
-            print('Failed To Give Item: ' .. item .. ' Check Your qb-core/shared/items.lua')
-            return false
-        end
-    else
-        local carry = exports.ox_inventory:CanCarryItem(source, item, amount)
-        if not carry then Notifys(source, 'You Cant Carry that Much Weight!', 'error') return false end
-        if exports.ox_inventory:AddItem(source, item, amount) then
-            return true
-        else
-            print('Failed To Give Item: ' .. item .. ' Check Your ox_inventory/data/items.lua')
-            return false
-        end
-    end
-end
-
-
-function getRep(source, type) 
-    local Player = getPlayer(source) 
-    local sql = MySQL.query.await('SELECT * FROM drugrep WHERE cid = ?', {Player.PlayerData.citizenid}) 
+    local identifier = GetPlayerFrameworkIdentifier(src)
+    local sql = MySQL.query.await('SELECT * FROM drugrep WHERE cid = ?', { identifier })
     if not sql[1] then
         local table = json.encode({
-            coke = Player.PlayerData.metadata.coke or 0,
-            lsd = Player.PlayerData.metadata.lsd or 0,
-            heroin = Player.PlayerData.metadata.heroin or 0,
-            dealerrep = Player.PlayerData.metadata.dealerrep or 0,
+            coke = GetPlayerFrameworkMetadata(src, "coke") or 0,
+            lsd = GetPlayerFrameworkMetadata(src, "lsd") or 0,
+            heroin = GetPlayerFrameworkMetadata(src, "heroin") or 0,
+            dealerrep = GetPlayerFrameworkMetadata(src, "dealerrep") or 0,
             cornerselling = {
                 price = QBConfig.SellLevel[1].price,
                 rep = 0,
@@ -198,7 +107,8 @@ function getRep(source, type)
                 level = 1
             }
         })
-        MySQL.insert('INSERT INTO drugrep SET cid = ?, drugrep = ?, name = ?', {Player.PlayerData.citizenid, table, GetName(source)})
+        MySQL.insert('INSERT INTO drugrep SET cid = ?, drugrep = ?, name = ?',
+            { identifier, table, GetPlayerFrameworkName(source) })
         Wait(1000)
         return json.decode(table)
     else
@@ -216,21 +126,22 @@ function getRep(source, type)
         elseif type == 'cornerselling' then
             return rep.cornerselling
         else
-            print('^1 Error: No Valid Drug Rep Option Chosen') 
+            print('^1 Error: No Valid Drug Rep Option Chosen')
         end
         return false
     end
 end
 
-function GetAllRep(source) 
-    local Player = getPlayer(source) 
-    local sql = MySQL.query.await('SELECT * FROM drugrep WHERE cid = ?', {Player.PlayerData.citizenid}) 
+function GetAllRep(source)
+    local src = source
+    local identifier = GetPlayerFrameworkIdentifier(src)
+    local sql = MySQL.query.await('SELECT * FROM drugrep WHERE cid = ?', { identifier })
     if not sql[1] then
         local table = json.encode({
-            coke = Player.PlayerData.metadata.coke or 0,
-            lsd = Player.PlayerData.metadata.lsd or 0,
-            heroin = Player.PlayerData.metadata.heroin or 0,
-            dealerrep = Player.PlayerData.metadata.dealerrep or 0,
+            coke = GetPlayerFrameworkMetadata(src, "coke") or 0,
+            lsd = GetPlayerFrameworkMetadata(src, "lsd") or 0,
+            heroin = GetPlayerFrameworkMetadata(src, "heroin") or 0,
+            dealerrep = GetPlayerFrameworkMetadata(src, "dealerrep") or 0,
             cornerselling = {
                 price = QBConfig.SellLevel[1].price,
                 rep = 0,
@@ -238,7 +149,8 @@ function GetAllRep(source)
                 level = 1
             }
         })
-        MySQL.insert('INSERT INTO drugrep SET cid = ?, drugrep = ?, name = ?', {Player.PlayerData.citizenid, table, GetName(source)})
+        MySQL.insert('INSERT INTO drugrep SET cid = ?, drugrep = ?, name = ?',
+            { identifier, table, GetPlayerFrameworkName(source) })
         Wait(1000)
         return json.decode(table)
     else
@@ -248,35 +160,42 @@ function GetAllRep(source)
     end
 end
 
-function AddRep(source, type, amount) 
+function AddRep(source, type, amount)
     if not amount then amount = 1 end
-    local Player = getPlayer(source) 
-    local sql = MySQL.query.await('SELECT * FROM drugrep WHERE cid = ?', {Player.PlayerData.citizenid}) 
+    local src = source
+    local identifier = GetPlayerFrameworkIdentifier(src)
+    local sql = MySQL.query.await('SELECT * FROM drugrep WHERE cid = ?', { identifier })
     local reps = json.decode(sql[1].drugrep)
     local update
     local rep = ''
     if reps.coke == nil then rep = reps[1] else rep = reps end
     if type == 'cornerselling' then
-        for k, v in pairs (QBConfig.SellLevel) do
-            if rep.cornerselling.level == k  then 
+        for k, v in pairs(QBConfig.SellLevel) do
+            if rep.cornerselling.level == k then
                 if rep.cornerselling.rep + amount >= v.maxrep then
-                    update = json.encode({coke = rep.coke, heroin = rep.heroin, lsd = rep.lsd, dealerrep = rep.dealerrep, cornerselling = {label = v.label, price = v.price, rep = rep.cornerselling.rep + amount, level = k + 1}})
+                    update = json.encode({ coke = rep.coke, heroin = rep.heroin, lsd = rep.lsd, dealerrep = rep
+                    .dealerrep, cornerselling = { label = v.label, price = v.price, rep = rep.cornerselling.rep + amount, level = k + 1 } })
                 else
-                    update = json.encode({coke = rep.coke, heroin = rep.heroin, lsd = rep.lsd, dealerrep = rep.dealerrep, cornerselling = {label = v.label, price = v.price, rep = rep.cornerselling.rep + amount, level = k}})
+                    update = json.encode({ coke = rep.coke, heroin = rep.heroin, lsd = rep.lsd, dealerrep = rep
+                    .dealerrep, cornerselling = { label = v.label, price = v.price, rep = rep.cornerselling.rep + amount, level = k } })
                 end
             end
-        end 
+        end
     elseif type == 'coke' then
-         update = json.encode({coke = rep.coke + amount, heroin = rep.heroin, lsd = rep.lsd, dealerrep = rep.dealerrep, cornerselling = rep.cornerselling})
+        update = json.encode({ coke = rep.coke + amount, heroin = rep.heroin, lsd = rep.lsd, dealerrep = rep.dealerrep, cornerselling =
+        rep.cornerselling })
     elseif type == 'heroin' then
-        update = json.encode({coke = rep.coke, heroin = rep.heroin + amount, lsd = rep.lsd, dealerrep = rep.dealerrep, cornerselling = rep.cornerselling})
+        update = json.encode({ coke = rep.coke, heroin = rep.heroin + amount, lsd = rep.lsd, dealerrep = rep.dealerrep, cornerselling =
+        rep.cornerselling })
     elseif type == 'lsd' then
-        update = json.encode({coke = rep.coke, heroin = rep.heroin, lsd = rep.lsd +amount , dealerrep = rep.dealerrep, cornerselling = rep.cornerselling})
+        update = json.encode({ coke = rep.coke, heroin = rep.heroin, lsd = rep.lsd + amount, dealerrep = rep.dealerrep, cornerselling =
+        rep.cornerselling })
     elseif type == 'dealerrep' then
-        update = json.encode({coke = rep.coke, heroin = rep.heroin, lsd = rep.lsd, dealerrep = rep.dealerrep + amount, cornerselling = rep.cornerselling})
+        update = json.encode({ coke = rep.coke, heroin = rep.heroin, lsd = rep.lsd, dealerrep = rep.dealerrep + amount, cornerselling =
+        rep.cornerselling })
     end
     if update == '' then return false end
-        MySQL.update('UPDATE drugrep SET drugrep = ? WHERE cid = ?', {update, Player.PlayerData.citizenid})
+    MySQL.update('UPDATE drugrep SET drugrep = ? WHERE cid = ?', { update, identifier })
     return true
 end
 
@@ -285,24 +204,24 @@ lib.addCommand('addCornerSellingTOREP', {
     restricted = 'group.admin'
 }, function(source, args, raw)
     local sql = MySQL.query.await('SELECT * FROM drugrep', {})
-    for k, v in pairs (sql) do 
-      local new = {}
-      local old = json.decode(v.drugrep)
-      local get = old[1] or old
-      table.insert(new, {
-                coke = get.coke,
-                lsd = get.lsd,
-                heroin = get.heroin,
-                dealerrep = get.dealerrep,
-                cornerselling = {
-                    price = QBConfig.SellLevel[1].price,
-                    rep = 0,
-                    label = QBConfig.SellLevel[1].label,
-                    level = 1
-                }
-            })
-      local news = json.encode(new)
-      MySQL.query.await('UPDATE drugrep SET drugrep = ? WHERE cid = ?', {news, v.cid})
+    for k, v in pairs(sql) do
+        local new = {}
+        local old = json.decode(v.drugrep)
+        local get = old[1] or old
+        table.insert(new, {
+            coke = get.coke,
+            lsd = get.lsd,
+            heroin = get.heroin,
+            dealerrep = get.dealerrep,
+            cornerselling = {
+                price = QBConfig.SellLevel[1].price,
+                rep = 0,
+                label = QBConfig.SellLevel[1].label,
+                level = 1
+            }
+        })
+        local news = json.encode(new)
+        MySQL.query.await('UPDATE drugrep SET drugrep = ? WHERE cid = ?', { news, v.cid })
     end
 end)
 
@@ -312,46 +231,24 @@ function sortTab(tbl, type)
     end)
 end
 
-function getCops()
-    local amount = 0
-    local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
-         if v.PlayerData.job.type == 'leo' and v.PlayerData.job.onduty then
-          amount = amount + 1
-         end
-    end
-   return amount
+function GetPoliceOnline()
+    local players = Bridge.Framework.GetPlayersByJob('police')
+    return #players or 0
 end
 
 lib.callback.register('md-drugs:server:GetCoppers', function(source, cb, args)
     local amount = 0
-    local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
-         if v.PlayerData.job.type == 'leo' and v.PlayerData.job.onduty then
-          amount = amount + 1
-         end
+    local allPdPlayers = Bridge.Framework.GetPlayersByJob('police')
+    for k, v in pairs(allPdPlayers) do
+        if Bridge.Framework.GetPlayerDuty(v) then
+            amount = amount + 1
+        end
     end
-   return amount
+    return amount
 end)
 
 lib.callback.register('md-drugs:server:GetRep', function(source, cb, args)
     local src = source
-    local rep = GetAllRep(source) 
+    local rep = GetAllRep(src)
     return rep
-end)
-
-CreateThread(function()
-    if not GetResourceState('ox_lib'):find("start") then 
-       print('^1 ox_lib Is A Depndancy, Not An Optional ')
-    end
-end)
-
-CreateThread(function()
-    local url = "https://raw.githubusercontent.com/Mustachedom/md-drugs/main/version.txt"
-    local version = GetResourceMetadata('md-drugs', "version" )
-     PerformHttpRequest(url, function(err, text, headers)
-         if (text ~= nil) then
-                print('^2 Your Version:' .. version .. ' | Current Version:' .. text .. '' )  
-         end
-     end, "GET", "", "")
 end)

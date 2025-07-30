@@ -122,8 +122,8 @@ lib.callback.register('md-drugs:server:GetDeliveryItem', function(data)
         local time = os.time()
         local timeout = math.floor(os.difftime(time, check[1].maxtime) / 60)
         
-        if timeout > 15 then MySQL.query.await('DELETE FROM deliveriesdealer WHERE cid = ?', {Player.PlayerData.citizenid}) Notifys(src, 'You Failed To Make It In Time!', 'error' ) return false end
-        Notifys(src,'You Already Have A Delivery To Make', 'error' ) return false, item, amount, coord
+        if timeout > 15 then MySQL.query.await('DELETE FROM deliveriesdealer WHERE cid = ?', {Player.PlayerData.citizenid}) Notify(src, 'You Failed To Make It In Time!', 'error' ) return false end
+        Notify(src,'You Already Have A Delivery To Make', 'error' ) return false, item, amount, coord
     end
 end)
 
@@ -135,7 +135,7 @@ RegisterNetEvent('md-drugs:server:giveDeliveryItems', function(item, amount)
     local time = os.time()
     local timeout = math.floor(os.difftime(time, check[1].maxtime) / 60)
     local itemData = json.decode(check[1].itemdata)
-    if timeout >= 15 then MySQL.query.await('DELETE FROM deliveriesdealer WHERE cid = ?', {Player.PlayerData.citizenid}) Notifys(source, 'You Failed To Make It In Time!', 'error' )  return end
+    if timeout >= 15 then MySQL.query.await('DELETE FROM deliveriesdealer WHERE cid = ?', {Player.PlayerData.citizenid}) Notify(source, 'You Failed To Make It In Time!', 'error' )  return end
     if item ~= itemData.item then return end
     if amount ~= itemData.amount then return end
     if RemoveItem(src, item, amount) then
@@ -169,7 +169,7 @@ lib.addCommand("newdealer", {
     
     local result = MySQL.scalar.await('SELECT name FROM dealers WHERE name = ?', { dealerName })
     if result then
-        return Notifys(source,"Already Exists", "error")
+        return Notify(source,"Already Exists", "error")
     end
 
     MySQL.insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (?, ?, ?, ?)', {

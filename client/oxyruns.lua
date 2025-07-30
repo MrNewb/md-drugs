@@ -17,58 +17,48 @@ end)
 RegisterNetEvent("md-drugs:client:getoxylocationroute", function()
 	local config = lib.callback.await('md-drugs:server:getLocs', false)
     local loc = config.oxylocations[math.random(#config.oxylocations)]
-	if loc ~= nil then
-    	SetNewWaypoint(loc.x, loc.y)
-		local current = "g_m_y_famdnf_01"
-		RegisterModelRequest(current)
-    	local oxybuyer = CreatePed(0, current,loc.x,loc.y,loc.z-1, loc.w, false, false)
-		Freeze(oxybuyer, true, loc.w)
-		repeat
-			Wait(1000)
-		until #(GetEntityCoords(PlayerPedId()) - vector3(loc.x,loc.y,loc.z)) < 5.0
-		SendDispatchEvent(Config.PoliceAlertOxy)
-		AddSingleModel(oxybuyer,  { type = "client", label = locale("targets.oxy.talk"), icon = "fa-solid fa-dollar-sign",
-		action = function()
-			if carryPackage then
-				if not BeginProgressBar(locale("oxy.hand"), 4000, 'uncuff') then return end
-				TriggerServerEvent("md-drugs:server:giveoxybox")
-				DeleteEntity(oxybuyer)
-				DetachEntity(carryPackage, true, true)
-				DeleteObject(carryPackage)
-				carryPackage = nil
-			else
-				Notify(locale("oxy.empty"), "error")
-			end
-		end}, oxybuyer)
-	end
+	if loc == nil then return end
+	SetNewWaypoint(loc.x, loc.y)
+	local current = "g_m_y_famdnf_01"
+	RegisterModelRequest(current)
+	local oxybuyer = CreatePed(0, current,loc.x,loc.y,loc.z-1, loc.w, false, false)
+	Freeze(oxybuyer, true, loc.w)
+	repeat
+		Wait(1000)
+	until #(GetEntityCoords(PlayerPedId()) - vector3(loc.x,loc.y,loc.z)) < 5.0
+	SendDispatchEvent(Config.PoliceAlertOxy)
+	AddSingleModel(oxybuyer,  { type = "client", label = locale("targets.oxy.talk"), icon = "fa-solid fa-dollar-sign",
+	action = function()
+		if not carryPackage then return Notify(locale("oxy.empty"), "error") end
+		if not BeginProgressBar(locale("oxy.hand"), 4000, 'uncuff') then return end
+		TriggerServerEvent("md-drugs:server:giveoxybox")
+		DeleteEntity(oxybuyer)
+		DetachEntity(carryPackage, true, true)
+		DeleteObject(carryPackage)
+		carryPackage = nil
+	end}, oxybuyer)
 end)
 
 
 RegisterNetEvent("md-drugs:client:getfromtrunk", function() 
-	if carryPackage then
-		Notify(locale("oxy.cantcarry"), "error")
-	else
-		local pos = GetEntityCoords(PlayerPedId(), true)
-		RegisterAnimDict('anim@heists@box_carry@')
-		TaskPlayAnim(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 5.0, -1, -1, 50, 0, false, false, false)
-		RegisterModelRequest("hei_prop_drug_statue_box_big")
-		local object = CreateObject("hei_prop_drug_statue_box_big", pos.x, pos.y, pos.z, true, true, true)
-		AttachEntityToEntity(object, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 57005), 0.05, 0.1, -0.3, 300.0, 250.0, 20.0, true, true, false, true, 1, true)
-		carryPackage = object
-	end
+	if carryPackage then return Notify(locale("oxy.carrying"), "error") end
+	local pos = GetEntityCoords(PlayerPedId(), true)
+	RegisterAnimDict('anim@heists@box_carry@')
+	TaskPlayAnim(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 5.0, -1, -1, 50, 0, false, false, false)
+	RegisterModelRequest("hei_prop_drug_statue_box_big")
+	local object = CreateObject("hei_prop_drug_statue_box_big", pos.x, pos.y, pos.z, true, true, true)
+	AttachEntityToEntity(object, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 57005), 0.05, 0.1, -0.3, 300.0, 250.0, 20.0, true, true, false, true, 1, true)
+	carryPackage = object
 end)
 
 
 RegisterNetEvent("md-drugs:client:giveoxybox", function(data) 
-	if carryPackage then
-		if not BeginProgressBar(locale("oxy.hand"), 4000, 'uncuff') then return end
-		TriggerServerEvent("md-drugs:server:giveoxybox")
-		DeleteEntity(data.ped)
-		DetachEntity(carryPackage, true, true)
-		DeleteObject(carryPackage)
-	    carryPackage = nil
-	else
-		Notify(locale("oxy.empty"), "error")
-	end
+	if not carryPackage then return Notify(locale("oxy.empty"), "error") end
+	if not BeginProgressBar(locale("oxy.hand"), 4000, 'uncuff') then return end
+	TriggerServerEvent("md-drugs:server:giveoxybox")
+	DeleteEntity(data.ped)
+	DetachEntity(carryPackage, true, true)
+	DeleteObject(carryPackage)
+	carryPackage = nil
 end)
 

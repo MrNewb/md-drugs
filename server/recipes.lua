@@ -145,7 +145,7 @@ function GetRecipe(source, type, method, tier)
         if item and item.amount >= v then 
             has = has + 1
         else
-            Notifys(src, ' You Need ' .. v .. ' Of '  .. GetLabels(k) .. ' To Do This', 'error')
+            Notify(src, ' You Need ' .. v .. ' Of '  .. GetItemInfo(k).label .. ' To Do This', 'error')
         end
         need = need + 1
     end
@@ -155,7 +155,7 @@ function GetRecipe(source, type, method, tier)
         end
         for k,v in pairs (recipe[type][method][tier].give) do
             AddItem(src, k, v) 
-            Log(GetName(src) .. ' Made ' .. GetLabels(k) .. '!', 'drugMaking')
+            Log(GetPlayerFrameworkName(src) .. ' Made ' .. GetItemInfo(k).label .. '!', 'drugMaking')
         end  
         return true
     else
