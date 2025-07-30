@@ -4,7 +4,7 @@ CreateThread(function()
     local num = lib.callback.await('md-drugs:server:GetMerchant', false)
     local model = {"g_m_y_famdnf_01", 's_m_m_doctor_01', 'u_m_m_jesus_01', "prop_cooker_03"}
     for k, v in pairs (model) do
-        lib.requestModel(v, Config.RequestModelTime)
+        RegisterModelRequest(v)
     end
     local tabdealer = CreatePed(0, 'g_m_y_famdnf_01',config.singleSpot.buylsdlabkit.x,config.singleSpot.buylsdlabkit.y,config.singleSpot.buylsdlabkit.z-1,config.singleSpot.buylsdlabkit.w, false, false)
     local heroinkitdealer = CreatePed(0,"g_m_y_famdnf_01",config.singleSpot.buyheroinlabkit.x, config.singleSpot.buyheroinlabkit.y, config.singleSpot.buyheroinlabkit.z-1, config.singleSpot.buyheroinlabkit.w, false, false)

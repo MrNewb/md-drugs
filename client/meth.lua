@@ -69,10 +69,7 @@ local function trayscarry()
 		end
 		TaskPlayAnim(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 5.0, -1, -1, 50, 0, false, false,
 			false)
-		RequestModel("bkr_prop_meth_tray_02a")
-		while not HasModelLoaded("bkr_prop_meth_tray_02a") do
-			Wait(0)
-		end
+		RegisterModelRequest("bkr_prop_meth_tray_02a")
 		trays = CreateObject("bkr_prop_meth_tray_02a", pos.x, pos.y, pos.z, true, true, true)
 		AttachEntityToEntity(trays, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 28422), 0.01, -0.2,
 			-0.2, 20.0, 0.0, 0.0, true, true, false, true, 1, true)

@@ -1,7 +1,7 @@
 local carryPackage = nil
 
 RegisterNetEvent("md-drugs:client:GetOxyCar", function()
-	lib.requestModel("burrito3", Config.RequestModelTime)
+	RegisterModelRequest("burrito3")
 	local paid = lib.callback.await('md-drugs:server:payfortruck', false)
 	if not paid then return end
 	local loca = lib.callback.await('md-drugs:server:getLocs', false)
@@ -20,7 +20,7 @@ RegisterNetEvent("md-drugs:client:getoxylocationroute", function()
 	if loc ~= nil then
     	SetNewWaypoint(loc.x, loc.y)
 		local current = "g_m_y_famdnf_01"
-		lib.requestModel(current, Config.RequestModelTime)
+		RegisterModelRequest(current)
     	local oxybuyer = CreatePed(0, current,loc.x,loc.y,loc.z-1, loc.w, false, false)
 		Freeze(oxybuyer, true, loc.w)
 		repeat
@@ -49,9 +49,9 @@ RegisterNetEvent("md-drugs:client:getfromtrunk", function()
 		Notify(locale("oxy.cantcarry"), "error")
 	else
 		local pos = GetEntityCoords(PlayerPedId(), true)
-		lib.requestAnimDict('anim@heists@box_carry@')
+		RegisterAnimDict('anim@heists@box_carry@')
 		TaskPlayAnim(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 5.0, -1, -1, 50, 0, false, false, false)
-		lib.RequestModel("hei_prop_drug_statue_box_big")
+		RegisterModelRequest("hei_prop_drug_statue_box_big")
 		local object = CreateObject("hei_prop_drug_statue_box_big", pos.x, pos.y, pos.z, true, true, true)
 		AttachEntityToEntity(object, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 57005), 0.05, 0.1, -0.3, 300.0, 250.0, 20.0, true, true, false, true, 1, true)
 		carryPackage = object

@@ -72,7 +72,7 @@ RegisterNetEvent("md-drugs:client:heatliquid", function(data)
     if not ItemCheck('diethylamide') then return end
     if not minigame() then
         dirtylsd = true
-        loadParticle(dict)
+        LoadParticle(dict)
         local exitPtfx = StartParticleFxLoopedOnEntity("scr_dst_cocaine", data.data, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5,
             false, false, false)
         SetParticleFxLoopedAlpha(exitPtfx, 3.0)

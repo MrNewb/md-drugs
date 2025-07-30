@@ -11,7 +11,7 @@ local function SpawnDealer()
     local getDealers = lib.callback.await('md-drugs:server:getDealers', false)
     for k,v in pairs(getDealers) do
 		local Ped = "g_m_y_famdnf_01"
-        lib.requestModel(Ped, Config.RequestModelTime)
+        RegisterModelRequest(Ped)
         local loc = json.decode(v.coords)
         dealer[k] = CreatePed(0, Ped,loc.x,loc.y, loc.z-1, loc.h, false, false)
         Freeze(dealer[k], true, loc.h)

@@ -25,7 +25,7 @@ end)
 RegisterNetEvent("Mescaline:init", function()
     for k, v in pairs(GlobalState.Mescaline) do
         local hash = GetHashKey(v.model)
-        if not HasModelLoaded(hash) then LoadModel(hash) end
+        if not HasModelLoaded(hash) then RegisterModelRequest(hash) end
         if not v.taken then
             Mescaline[k] = CreateObject(hash, v.location.x, v.location.y, v.location.z, false, true, true)
             Freeze(Mescaline[k], true, v.heading)
@@ -62,7 +62,7 @@ RegisterNetEvent("md-drugs:client:takemescaline", function()
     if chance <= Config.Badtrip then
         AlienEffect()
         local clone = ClonePed(PlayerPedId(), false, false, true)
-        SetEntityAsMissionEntity(clone)
+        SetEntityAsMissionEntity(clone, true, true)
         SetPedFleeAttributes(clone, false)
         GiveWeaponToPed(clone, weapon, 1, false, true)
         TaskCombatPed(clone, PlayerPedId(), 0, 16)

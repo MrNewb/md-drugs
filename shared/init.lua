@@ -29,4 +29,26 @@ if IsDuplicityVersion() then
     end)
 else
 
+    function LoadParticle(dict)
+        local timeOut = 30000
+        local count = 0
+        if not HasNamedPtfxAssetLoaded(dict) then RequestNamedPtfxAsset(dict) end
+        while not HasNamedPtfxAssetLoaded(dict) and count < timeOut do
+            Wait(0)
+            count = count + 1
+        end
+        SetPtfxAssetNextCall(dict)
+    end
+
+    --lib.requestModel
+    CreatePropModel = Bridge.Utility.CreateProp
+
+    CreaveVehicleModel = Bridge.Utility.CreateVehicle
+
+    CreatePedModel = Bridge.Utility.CreatePed
+
+    RegisterAnimDict = Bridge.Utility.RequestAnimDict
+
+    RegisterModelRequest = Bridge.Utility.LoadModel
+
 end

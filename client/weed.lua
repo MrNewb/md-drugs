@@ -17,7 +17,7 @@ local function hasJob()
 RegisterNetEvent('weed:respawnCane', function(loc)
     local v = GlobalState.WeedPlant[loc]
     local hash = GetHashKey(v.model)
-    if not HasModelLoaded(hash) then LoadModel(hash) end
+    if not HasModelLoaded(hash) then RegisterModelRequest(hash) end
     if not WeedPlant[loc] then
         WeedPlant[loc] = CreateObject(hash, v.location.x, v.location.y, v.location.z-3.5, false, true, true)
 		Freeze(WeedPlant[loc],true,  v.heading)
@@ -33,7 +33,7 @@ end)
 RegisterNetEvent("weed:init", function()
     for k, v in pairs (GlobalState.WeedPlant) do
         local hash = GetHashKey(v.model)
-        lib.requestModel('prop_weed_01', 1000)
+        RegisterModelRequest('prop_weed_01')
         if not v.taken then
             WeedPlant[k] = CreateObject(hash, v.location.x, v.location.y, v.location.z-3.5, false, true, true)
 			Freeze(WeedPlant[k],true,  v.heading)

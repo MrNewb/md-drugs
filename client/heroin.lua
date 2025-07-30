@@ -35,7 +35,7 @@ end)
 RegisterNetEvent("heroin:init", function()
     for k, v in pairs (GlobalState.PoppyPlants) do
         local hash = GetHashKey(v.model)
-        if not HasModelLoaded(hash) then LoadModel(hash) end
+        if not HasModelLoaded(hash) then RegisterModelRequest(hash) end
         if not v.taken then
             PoppyPlants[k] = CreateObject(hash, v.location.x, v.location.y, v.location.z, false, true, true)
             Freeze(PoppyPlants[k], true, v.heading)
@@ -91,7 +91,7 @@ RegisterNetEvent("md-drugs:client:heatliquidheroin", function(data)
     if not minigame() then
         dirty = true
         TriggerServerEvent("md-drugs:server:failheatingheroin")
-		loadParticle("core")
+		LoadParticle("core")
 	    local heroinkit = StartParticleFxLoopedOnEntity("exp_air_molotov", data.data, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5, false, false, false)
         SetParticleFxLoopedAlpha(heroinkit, 3.0)
 		SetPedToRagdoll(PlayerPedId(), 1300, 1300, 0, 0, 0, 0)

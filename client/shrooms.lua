@@ -1,15 +1,5 @@
 local shrooms = {}
 
-local function LoadModels(hash)
-    hash = GetHashKey(hash)
-    RequestModel(hash)
-    local timeout = GetGameTimer() + 5000  -- 5-second timeout
-    while not HasModelLoaded(hash) and GetGameTimer() < timeout do
-        Wait(10)
-    end
-    if HasModelLoaded(hash) then return true end
-end
-
 local function pick(loc)
     if not progressbar(locale("Shrooms.pick"), 4000, 'uncuff') then return end
     TriggerServerEvent("shrooms:pickupCane", loc)
@@ -44,7 +34,7 @@ end)
 RegisterNetEvent("shrooms:init", function()
     for k, v in pairs (GlobalState.shrooms) do
         local hash = GetHashKey(v.model)
-        if not HasModelLoaded(hash) then LoadModels(hash) end
+        if not HasModelLoaded(hash) then RegisterModelRequest(hash) end
         if not v.taken then
             shrooms[k] = CreateObject(hash, v.location.x, v.location.y, v.location.z, false, true, true)
             Freeze(shrooms[k], true, v.heading)
