@@ -1,58 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-local progressbartype = Config.progressbartype
 local ReturnMinigameSuccesstype = Config.ReturnMinigameSuccesstype
-local dispatch = Config.Dispatch
-
-function progressbar(text, time, anim)
-	TriggerEvent('animations:client:EmoteCommandStart', { anim })
-	if progressbartype == 'oxbar' then
-		if lib.progressBar({ duration = time, label = text, useWhileDead = false, canCancel = true, disable = { car = true, move = true }, }) then
-			if GetResourceState('scully_emotemenu') == 'started' then
-				exports.scully_emotemenu:cancelEmote()
-			else
-				TriggerEvent('animations:client:EmoteCommandStart', { "c" })
-			end
-			return true
-		end
-	elseif progressbartype == 'oxcir' then
-		if lib.progressCircle({ duration = time, label = text, useWhileDead = false, canCancel = true, position = 'bottom', disable = { car = true, move = true }, }) then
-			if GetResourceState('scully_emotemenu') == 'started' then
-				exports.scully_emotemenu:cancelEmote()
-			else
-				TriggerEvent('animations:client:EmoteCommandStart', { "c" })
-			end
-			return true
-		end
-	elseif progressbartype == 'qb' then
-		local test = false
-		local cancelled = false
-		QBCore.Functions.Progressbar("drink_something", text, time, false, true,
-			{ disableMovement = true, disableCarMovement = true, disableMouse = false, disableCombat = true, disableInventory = true,
-			}, {}, {}, {}, function() -- Done
-			test = true
-			if GetResourceState('scully_emotemenu') == 'started' then
-				exports.scully_emotemenu:cancelEmote()
-			else
-				TriggerEvent('animations:client:EmoteCommandStart', { "c" })
-			end
-		end, function()
-			cancelled = true
-			if GetResourceState('scully_emotemenu') == 'started' then
-				exports.scully_emotemenu:cancelEmote()
-			else
-				TriggerEvent('animations:client:EmoteCommandStart', { "c" })
-			end
-		end)
-		repeat
-			Wait(100)
-		until cancelled or test
-		if test then return true end
-	else
-		print "^1 SCRIPT ERROR: Md-DRUGS set your progressbar with one of the options!"
-	end
-end
-
 function ReturnMinigameSuccess()
 	local time = 0
 	local game = Config.ReturnMinigameSuccesss
@@ -158,58 +106,6 @@ function ReturnMinigameSuccess()
 	end
 end
 
-
-
-function GetImage(img)
-	if GetResourceState('ox_inventory') == 'started' then
-		local Items = exports['ox_inventory']:Items()
-		if not Items[img] then
-			print(' You Are Missing: ' .. img .. ' From Your ox items.lua')
-			return
-		end
-		local itemClient = Items[img] and Items[img]['client']
-		if itemClient and itemClient['image'] then
-			return itemClient['image']
-		else
-			return "nui://ox_inventory/web/images/" .. img .. '.png'
-		end
-	end
-	local invs = {
-		['ps-inventory'] = "nui://ps-inventory/html/images/",
-		['lj-inventory'] = "nui://lj-inventory/html/images/",
-		['qb-inventory'] = "nui://qb-inventory/html/images/",
-		['qs-inventory'] = "nui://qs-inventory/html/imgages/",
-		['origen_inventory'] = "nui://origen_inventory/html/img/",
-		['core_inventory'] = "nui://core_inventory/html/img/"
-	}
-	for k, v in pairs(invs) do
-		if not QBCore.Shared.Items[img] then
-			print(' You Are Missing: ' .. img .. ' From Your QB items.lua')
-			return
-		end
-		if GetResourceState(k) == 'started' then
-			return v .. QBCore.Shared.Items[img].image
-		end
-	end
-end
-
-function GetLabel(label)
-	if GetResourceState('ox_inventory') == 'started' then
-		local Items = exports['ox_inventory']:Items()
-		if not Items[label] then
-			print(' You Are Missing: ' .. label .. ' From Your ox items.lua')
-			return
-		end
-		return Items[label]['label']
-	else
-		if QBCore.Shared.Items[label] == nil then
-			print("There Is No " .. label .. " In Your QB Items.lua")
-			return
-		end
-		return QBCore.Shared.Items[label]['label']
-	end
-end
-
 function GetRep()
 	local rep = lib.callback.await('md-drugs:server:GetRep', false)
 	return rep
@@ -231,9 +127,9 @@ function makeMenu(name, rep)
 		end
 		if allow then
 			menu[#menu + 1] = {
-				icon = GetImage(v.name),
+				icon = GetItemInfo(v.name).image or "fa-solid fa-question",
 				description = '$' .. v.price,
-				title = GetLabel(v.name),
+				title = GetItemInfo(v.name).label,
 				onSelect = function()
 					local settext = "Cost: $" .. v.price
 					local dialog = exports.ox_lib:inputDialog(v.name .. "!", {
@@ -249,73 +145,6 @@ function makeMenu(name, rep)
 	end
 	sorter(menu, 'title')
 	lib.registerContext({ id = data.id, title = data.title, options = menu })
-end
-
-
-function Email(sender, subject, message)
-	if Config.Phone == 'yflip' then
-		local receiver = GetPlayerServerId(PlayerId())
-		local insertId, received = exports["yflip-phone"]:SendMail({
-			title = subject,
-			sender = sender,
-			senderDisplayName = sender,
-			content = message,
-		}, 'phoneNumber', receiver)
-	elseif Config.Phone == 'qs' then
-		TriggerServerEvent('qs-smartphone:server:sendNewMail', {
-			sender = sender,
-			subject = subject,
-			message = message,
-			button = {}
-		})
-	else
-		TriggerServerEvent('qb-phone:server:sendNewMail', {
-			sender = sender,
-			subject = subject,
-			message = message,
-		})
-	end
-end
-
-function PoliceCall(chance)
-	local math = math.random(1, 100)
-	if math <= chance then
-		if dispatch == 'ps' then
-			exports['ps-dispatch']:DrugSale()
-		elseif dispatch == 'cd' then
-			local data = exports['cd_dispatch']:GetPlayerInfo()
-			TriggerServerEvent('cd_dispatch:AddNotification', {
-				job_table = { 'police', },
-				coords = data.coords,
-				title = '420-69 Drug Sale',
-				message = 'A ' .. data.sex .. ' robbing a store at ' .. data.street,
-				flash = 0,
-				unique_id = data.unique_id,
-				sound = 1,
-				blip = { sprite = 431, scale = 1.2, colour = 3, flashes = false, text = '420-69 Drug Sale', time = 5, radius = 0, }
-			})
-		elseif dispatch == 'core' then
-			exports['core_dispatch']:addCall("420-69", "Drugs Are Being Sold", {
-				{ icon = "fa-ruler", info = "4.5 MILES" },
-			}, { GetEntityCoords(PlayerPedId()) }, "police", 3000, 11, 5)
-		elseif dispatch == 'aty' then
-			exports["aty_dispatch"]:SendDispatch('Drug Sale', '420-69', 40, { 'police' })
-		elseif dispatch == 'qs' then
-			exports['qs-dispatch']:DrugSale()
-		elseif dispatch == 'codem' then
-			local Data = {
-				type = 'Drug Sale',
-				header = 'Someone Selling Drugs',
-				text = 'Hurry up and save the community',
-				code = '420-69',
-			}
-			exports['codem-dispatch']:CustomDispatch(Data)
-		else
-			print('Congrats, You Choose 0 of the options :)')
-		end
-	else
-		return
-	end
 end
 
 function GetCops(number)
@@ -617,21 +446,10 @@ function StartRay2()
 	until run == false
 end
 
-CreateThread(function()
-	RegisterModelRequest('prop_plant_01b')
-	RegisterModelRequest('prop_plant_01a')
-	RegisterModelRequest('prop_cactus_03')
-	RegisterModelRequest('prop_weed_01')
-	TriggerEvent('weed:init')
-	TriggerEvent('heroin:init')
-	TriggerEvent('coke:init')
-	TriggerEvent('Mescaline:init')
-	TriggerEvent('shrooms:init')
-	TriggerEvent('weed:init')
-end)
+
 
 lib.callback.register('md-drugs:client:uncuff', function(data)
-	if not progressbar(data, 4000, 'uncuff') then return end
+	if not BeginProgressBar(data, 4000, 'uncuff') then return end
 	return true
 end)
 

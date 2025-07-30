@@ -15,7 +15,7 @@ local function createLabKit(coord, head)
             data = labkit,
             action = function()
                 if not VerifyPlayerHasItem('cleaningkit') then return end
-                if not progressbar(locale("lsd.clean"), 4000, 'clean') then return end
+                if not BeginProgressBar(locale("lsd.clean"), 4000, 'clean') then return end
                 local check = lib.callback.await('md-drugs:server:removecleaningkit')
                 if check then
                     dirtylsd = false
@@ -29,14 +29,14 @@ end
 
 RegisterNetEvent("md-drugs:client:getlysergic", function(data)
     if not ReturnMinigameSuccess() then return end
-    if not progressbar(locale("lsd.steallys"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("lsd.steallys"), 4000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:getlysergic", data.data)
 end)
 
 
 RegisterNetEvent("md-drugs:client:getdiethylamide", function(data)
     if not ReturnMinigameSuccess() then return end
-    if not progressbar(locale("lsd.stealdie"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("lsd.stealdie"), 4000, 'uncuff') then return end
     TriggerServerEvent('md-drugs:server:getdiethylamide', data.data)
 end)
 
@@ -52,14 +52,14 @@ lib.callback.register("md-drugs:client:setlsdlabkit", function()
             tableout = false
             return
         end
-        if not progressbar(locale("lsd.place"), 4000, 'uncuff') then return end
+        if not BeginProgressBar(locale("lsd.place"), 4000, 'uncuff') then return end
         createLabKit(loc, head)
         return true, loc
     end
 end)
 
 RegisterNetEvent("md-drugs:client:getlabkitback", function(data)
-    if not progressbar(locale("lsd.tablepack"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("lsd.tablepack"), 4000, 'uncuff') then return end
     DeleteObject(data.data)
     TriggerServerEvent('md-drugs:server:getlabkitback')
     tableout = false
@@ -82,7 +82,7 @@ RegisterNetEvent("md-drugs:client:heatliquid", function(data)
             nil)
         return
     end
-    if not progressbar(locale("lsd.heat"), 7000, 'uncuff') then return end
+    if not BeginProgressBar(locale("lsd.heat"), 7000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:heatliquid")
 end)
 
@@ -93,7 +93,7 @@ RegisterNetEvent("md-drugs:client:refinequalityacid", function()
         TriggerServerEvent("md-drugs:server:failrefinequality")
         return
     end
-    if not progressbar(locale("lsd.refine"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("lsd.refine"), 4000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:refinequalityacid")
 end)
 
@@ -103,12 +103,12 @@ RegisterNetEvent("md-drugs:client:maketabpaper", function()
         TriggerServerEvent("md-drugs:server:failtabs")
         return
     end
-    if not progressbar(locale("lsd.dip"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("lsd.dip"), 4000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:maketabpaper")
 end)
 
 RegisterNetEvent("md-drugs:client:buytabs", function(data)
-    if not progressbar(locale("lsd.buypaper"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("lsd.buypaper"), 4000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:gettabpaper", data.data)
 end)
 
@@ -117,6 +117,6 @@ RegisterNetEvent("md-drugs:client:buylabkit", function()
         Notify(locale("lsd.hav"), 'error')
         return
     end
-    if not progressbar(locale("lsd.buykit"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("lsd.buykit"), 4000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:getlabkit")
 end)

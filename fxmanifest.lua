@@ -5,12 +5,12 @@ fx_version "cerulean"
 game "gta5"
 version  '3.9.0'
 client_scripts {
-	'client/**.lua',
+	'client/**/*.lua',
 }
 
 server_scripts {
-	'server/functions.lua',
-   	'server/**.lua',
+   	'server/**/*.lua',
+   	'server/*.lua',
 	'@oxmysql/lib/MySQL.lua',
 }
 

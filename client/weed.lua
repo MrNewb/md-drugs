@@ -2,7 +2,7 @@ local WeedPlant = {}
 local exploded, drying = false, false
 
 local function pick(loc)
-	if not progressbar(locale("Weed.pick"), 4000, 'uncuff') then return end
+	if not BeginProgressBar(locale("Weed.pick"), 4000, 'uncuff') then return end
 	TriggerServerEvent("weed:pickupCane", loc)
 end
 
@@ -32,18 +32,6 @@ RegisterNetEvent("weed:init", function()
 			Freeze(WeedPlant[k], true, v.heading)
 			AddSingleModel(WeedPlant[k],
 				{ icon = "fas fa-hand", label = locale("targets.weed.pick"), action = function() pick(k) end }, k)
-		end
-	end
-end)
-
-AddEventHandler('onResourceStop', function(resourceName)
-	if GetCurrentResourceName() == resourceName then
-		SetModelAsNoLongerNeeded(GetHashKey('bkr_prop_weed_lrg_01b'))
-		for k, v in pairs(WeedPlant) do
-			if DoesEntityExist(v) then
-				DeleteEntity(v)
-				SetEntityAsNoLongerNeeded(v)
-			end
 		end
 	end
 end)
@@ -127,7 +115,7 @@ CreateThread(function()
 				exploded = false
 				return
 			end
-			if not progressbar(locale("Weed.shat"), 4000, 'uncuff') then return end
+			if not BeginProgressBar(locale("Weed.shat"), 4000, 'uncuff') then return end
 			TriggerServerEvent("md-drugs:server:makeoil")
 		end,
 		canInteract = function()
@@ -144,27 +132,10 @@ CreateThread(function()
 	FreezeEntityPosition(stove2, true)
 end)
 
-CreateThread(function()
-	BikerWeedFarm = exports['bob74_ipl']:GetBikerWeedFarmObject()
-	BikerWeedFarm.Style.Set(BikerWeedFarm.Style.upgrade)
-	BikerWeedFarm.Security.Set(BikerWeedFarm.Security.upgrade)
-	BikerWeedFarm.Details.Enable(BikerWeedFarm.Details.chairs, true)
-	BikerWeedFarm.Details.Enable(
-	{ BikerWeedFarm.Details.production, BikerWeedFarm.Details.chairs, BikerWeedFarm.Details.drying }, true)
-	BikerWeedFarm.Plant1.Clear(false)
-	BikerWeedFarm.Plant2.Clear(false)
-	BikerWeedFarm.Plant3.Clear(false)
-	BikerWeedFarm.Plant4.Clear(false)
-	BikerWeedFarm.Plant5.Clear(false)
-	BikerWeedFarm.Plant6.Clear(false)
-	BikerWeedFarm.Plant7.Clear(false)
-	BikerWeedFarm.Plant8.Clear(false)
-	BikerWeedFarm.Plant9.Clear(false)
-	RefreshInterior(BikerWeedFarm.interiorId)
-end)
+
 
 RegisterNetEvent("md-drugs:client:dodabs", function()
-	if not progressbar('Doing Dabs', 4000, 'bong2') then
+	if not BeginProgressBar('Doing Dabs', 4000, 'bong2') then
 		AlienEffect()
 		return
 	end
@@ -177,18 +148,18 @@ local function createBluntOptions(contextId, contextTitle, eventLabelPrefix, tab
 	for k, v in pairs(items) do
 		local label = {}
 		local item = ''
-		for m, d in pairs(v.take) do table.insert(label, GetLabel(m) .. ' X ' .. d) end
+		for m, d in pairs(v.take) do table.insert(label, GetItemInfo(m).label .. ' X ' .. d) end
 		for m, d in pairs(v.give) do item = m end
 		options[#options + 1] = {
-			icon = GetImage(item),
+			icon = GetItemInfo(item).image or "fa-solid fa-question",
 			description = table.concat(label, ", "),
-			title = GetLabel(item),
+			title = GetItemInfo(item).label,
 			event = "md-drugs:client:MakeWeedItems",
 			args = {
 				item = item,
 				recipe = 'weed',
 				num = k,
-				label = eventLabelPrefix .. GetLabel(item),
+				label = eventLabelPrefix .. GetItemInfo(item).label,
 				table = tableName
 			}
 		}
@@ -205,7 +176,7 @@ end)
 
 RegisterNetEvent("md-drugs:client:MakeWeedItems", function(data)
 	if not ReturnMinigameSuccess() then return end
-	if not progressbar('Making ' .. data.item, 4000, 'uncuff') then return end
+	if not BeginProgressBar('Making ' .. data.item, 4000, 'uncuff') then return end
 	TriggerServerEvent('md-drugs:server:MakeWeedItems', data)
 end)
 

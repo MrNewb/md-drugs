@@ -20,10 +20,10 @@ RegisterNetEvent("md-drugs:client:GetLocation", function(drug)
             action = function()
                 local luck = math.random(1, 100)
                 if luck <= Config.SuccessfulChance then
-                    if not progressbar("Wholesaling Drugs", 4000, 'uncuff') then return end
+                    if not BeginProgressBar("Wholesaling Drugs", 4000, 'uncuff') then return end
                     TriggerServerEvent("md-drugs:server:SuccessSale", drug)
                 else
-                    progressbar("YOU FUCKED NOW", 4000, 'uncuff')
+                    BeginProgressBar("YOU FUCKED NOW", 4000, 'uncuff')
                     SetUpPeds()
                 end
                 Wait(3000)
@@ -35,7 +35,7 @@ RegisterNetEvent("md-drugs:client:GetLocation", function(drug)
             Wait(1000)
             timer = timer + 1
         until #(GetEntityCoords(PlayerPedId()) - vector3(loc.x, loc.y, loc.z)) < 4.0 or timer == Config.WholesaleTimeout + 1
-        PoliceCall(Config.AlertPoliceWholesale)
+        SendDispatchEvent(Config.AlertPoliceWholesale)
         if timer <= Config.WholesaleTimeout or #(GetEntityCoords(PlayerPedId()) - vector3(loc.x, loc.y, loc.z)) < 4.0 then
             timer = 0
         else

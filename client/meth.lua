@@ -76,13 +76,7 @@ local function trayscarry()
 		tray = true
 	end
 end
-CreateThread(function()
-	BikerMethLab = exports['bob74_ipl']:GetBikerMethLabObject()
-	BikerMethLab.Style.Set(BikerMethLab.Style.upgrade)
-	BikerMethLab.Security.Set(BikerMethLab.Security.upgrade)
-	BikerMethLab.Details.Enable(BikerMethLab.Details.production, true)
-	RefreshInterior(BikerMethLab.interiorId)
-end)
+
 
 CreateThread(function()
 	local config = lib.callback.await('md-drugs:server:getLocs', false)
@@ -147,11 +141,11 @@ CreateThread(function()
 end)
 
 RegisterNetEvent("md-drugs:client:stealeph", function(data)
-	if not progressbar('Stealing Ephedrine', 4000, 'uncuff') then return end
+	if not BeginProgressBar('Stealing Ephedrine', 4000, 'uncuff') then return end
 	TriggerServerEvent("md-drugs:server:geteph", data.data)
 end)
 
 RegisterNetEvent("md-drugs:client:stealace", function(data)
-	if not progressbar('Stealing Acetone', 4000, 'uncuff') then return end
+	if not BeginProgressBar('Stealing Acetone', 4000, 'uncuff') then return end
 	TriggerServerEvent("md-drugs:server:getace", data.data)
 end)

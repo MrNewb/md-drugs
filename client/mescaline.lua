@@ -1,7 +1,7 @@
-local Mescaline = {}
+
 
 local function pick(loc)
-    if not progressbar(locale("mescaline.pick"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("mescaline.pick"), 4000, 'uncuff') then return end
     TriggerServerEvent("Mescaline:pickupCane", loc)
 end
 
@@ -36,21 +36,11 @@ RegisterNetEvent("Mescaline:init", function()
     end
 end)
 
-AddEventHandler('onResourceStop', function(resourceName)
-    if GetCurrentResourceName() == resourceName then
-        SetModelAsNoLongerNeeded(GetHashKey('prop_cactus_03'))
-        for k, v in pairs(Mescaline) do
-            if DoesEntityExist(v) then
-                DeleteEntity(v)
-                SetEntityAsNoLongerNeeded(v)
-            end
-        end
-    end
-end)
+
 
 RegisterNetEvent("md-drugs:client:drymescaline", function()
     if not VerifyPlayerHasItem('cactusbulb') then return end
-    if not progressbar(locale("mescaline.dry"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("mescaline.dry"), 4000, 'uncuff') then return end
     TriggerServerEvent("md-drugs:server:drymescaline")
 end)
 
@@ -58,7 +48,7 @@ RegisterNetEvent("md-drugs:client:takemescaline", function()
     local chance, chance2 = math.random(1, 100), math.random(1, 100)
     local weapon = ''
     if chance2 == 100 then weapon = 'weapon_rpg' else weapon = 'weapon_flaregun' end
-    if not progressbar(locale("mescaline.eat"), 4000, 'uncuff') then return end
+    if not BeginProgressBar(locale("mescaline.eat"), 4000, 'uncuff') then return end
     if chance <= Config.Badtrip then
         AlienEffect()
         local clone = ClonePed(PlayerPedId(), false, false, true)

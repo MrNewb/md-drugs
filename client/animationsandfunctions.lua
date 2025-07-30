@@ -197,14 +197,6 @@ function CutCoke()
 	FreezeEntityPosition(ped, false)
 end
 
-CreateThread(function()
-	BikerCocaine = exports['bob74_ipl']:GetBikerCocaineObject()
-	BikerCocaine.Style.Set(BikerCocaine.Style.upgrade)
-	BikerCocaine.Security.Set(BikerCocaine.Security.upgrade)
-	BikerCocaine.Details.Enable(
-	{ BikerCocaine.Details.cokeBasic1, BikerCocaine.Details.cokeBasic2, BikerCocaine.Details.cokeBasic3 }, true)
-end)
-
 function BagCoke()
 	local ver = ""
 	local animDict, animName = "anim@amb@business@meth@meth_smash_weight_check@", "break_weigh_" .. ver .. "char01"

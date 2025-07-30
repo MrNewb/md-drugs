@@ -26,11 +26,11 @@ RegisterNetEvent("md-drugs:client:getoxylocationroute", function()
 		repeat
 			Wait(1000)
 		until #(GetEntityCoords(PlayerPedId()) - vector3(loc.x,loc.y,loc.z)) < 5.0
-		PoliceCall(Config.PoliceAlertOxy)
+		SendDispatchEvent(Config.PoliceAlertOxy)
 		AddSingleModel(oxybuyer,  { type = "client", label = locale("targets.oxy.talk"), icon = "fa-solid fa-dollar-sign",
 		action = function()
 			if carryPackage then
-				if not progressbar(locale("oxy.hand"), 4000, 'uncuff') then return end
+				if not BeginProgressBar(locale("oxy.hand"), 4000, 'uncuff') then return end
 				TriggerServerEvent("md-drugs:server:giveoxybox")
 				DeleteEntity(oxybuyer)
 				DetachEntity(carryPackage, true, true)
@@ -61,7 +61,7 @@ end)
 
 RegisterNetEvent("md-drugs:client:giveoxybox", function(data) 
 	if carryPackage then
-		if not progressbar(locale("oxy.hand"), 4000, 'uncuff') then return end
+		if not BeginProgressBar(locale("oxy.hand"), 4000, 'uncuff') then return end
 		TriggerServerEvent("md-drugs:server:giveoxybox")
 		DeleteEntity(data.ped)
 		DetachEntity(carryPackage, true, true)

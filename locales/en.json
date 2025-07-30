@@ -99,6 +99,9 @@
             "talk": "Talk To Buyer"
         }
     },
+    "DispatchAlerts": {
+        "DispatchMessage": "Someone Seen Selling Drugs!"
+    },
     "Coke": {
         "picking": "Picking Leaves",
         "makepow": "Chopping Leaves Into A Powder",
